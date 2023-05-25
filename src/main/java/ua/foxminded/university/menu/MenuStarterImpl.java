@@ -2,6 +2,7 @@ package ua.foxminded.university.menu;
 
 import java.util.List;
 import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
 import ua.foxminded.university.dao.CourseDao;
 import ua.foxminded.university.dao.GroupDao;
 import ua.foxminded.university.dao.StudentDao;
@@ -11,6 +12,7 @@ import ua.foxminded.university.entity.Student;
 import ua.foxminded.university.viewprovider.View;
 
 @Repository
+@AllArgsConstructor
 public class MenuStarterImpl implements MenuStarter {
     private static final String MESSAGE_FIRST_NAME = "Input first name: ";
     private static final String MESSAGE_LAST_NAME = "Input last name: ";
@@ -25,13 +27,6 @@ public class MenuStarterImpl implements MenuStarter {
     private final CourseDao courseDao;
     private final GroupDao groupDao;
     private final View view;
-
-    public MenuStarterImpl(StudentDao studentDao, CourseDao courseDao, GroupDao groupDao, View view) {
-	this.studentDao = studentDao;
-	this.courseDao = courseDao;
-	this.groupDao = groupDao;
-	this.view = view;
-    }
 
     @Override
     public void startMenu() {
