@@ -11,9 +11,9 @@
     </parent>
     
     <groupId>ua.foxminded</groupId>
-    <artifactId>SpringBootJdbcApi</artifactId>
+    <artifactId>university</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SpringBootJdbcApi</name>
+    <name>university</name>
     <description>Demo project for Spring Boot</description>
     
     <properties>
@@ -23,9 +23,16 @@
         <jpa.version>2.7.5</jpa.version>
         <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
         <testconteinerspostgres.verion>1.17.3</testconteinerspostgres.verion>
+        <lombok.verion>1.18.24</lombok.verion>
     </properties>
     
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
