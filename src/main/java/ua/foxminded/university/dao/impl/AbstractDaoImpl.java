@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import lombok.AllArgsConstructor;
 import ua.foxminded.university.dao.Dao;
+import ua.foxminded.university.tools.IdProvider;
 
 @AllArgsConstructor
 public abstract class AbstractDaoImpl<T> implements Dao<T, Integer> {
     protected final JdbcTemplate jdbcTemplate;
     private final BeanPropertyRowMapper<T> rowMapper;
+    protected final IdProvider idProvider;
     
     private final String saveQuery;
     private final String findByIdQuery;

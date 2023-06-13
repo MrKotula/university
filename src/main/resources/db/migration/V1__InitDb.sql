@@ -13,6 +13,9 @@ CREATE TABLE IF NOT EXISTS schedule.students
     group_id character(36),
     first_name character varying(50) NOT NULL,
     last_name character varying(50) NOT NULL,
+    email character varying(36),
+    password character varying(70),
+    status character varying(10),
     CONSTRAINT students_pkey PRIMARY KEY (student_id),
     CONSTRAINT group_id FOREIGN KEY (group_id)
         REFERENCES schedule.groups (group_id)
@@ -39,4 +42,14 @@ CREATE TABLE IF NOT EXISTS schedule.students_courses
     CONSTRAINT student_id FOREIGN KEY (student_id) REFERENCES schedule.students (student_id)
     ON UPDATE NO ACTION
     ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS schedule.users
+(
+    user_id character(36) NOT NULL,
+    first_name character varying(50) NOT NULL,
+    last_name character varying(50) NOT NULL,
+    email character varying(32) NOT NULL,
+    password character varying(70) NOT NULL,
+    CONSTRAINT users_pkey PRIMARY KEY (user_id)
 );

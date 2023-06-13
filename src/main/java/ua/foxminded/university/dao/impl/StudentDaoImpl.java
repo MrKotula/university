@@ -1,28 +1,29 @@
 package ua.foxminded.university.dao.impl;
 
 import java.util.List;
-import java.util.UUID;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.foxminded.university.dao.StudentDao;
 import ua.foxminded.university.entity.Student;
+import ua.foxminded.university.tools.IdProvider;
+import ua.foxminded.university.tools.Status;
 
 @Transactional
 @Repository
 public class StudentDaoImpl extends AbstractDaoImpl<Student> implements StudentDao {
-    private static final String PROPERTY_STUDENT_ADD = "INSERT INTO schedule.students(student_id, group_id, first_name, last_name) VALUES (?, ?, ?, ?)";
-    private static final String PROPERTY_STUDENT_UPDATE = "UPDATE schedule.students SET student_id = ?, group_id = ?, first_name = ?, last_name = ? WHERE student_id = ?";
-    private static final String PROPERTY_STUDENT_GET_BY_ID = "SELECT student_id, group_id, first_name, last_name FROM schedule.students WHERE student_id = ";
+    private static final String PROPERTY_STUDENT_ADD = "INSERT INTO schedule.students(student_id, group_id, first_name, last_name, email, password, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String PROPERTY_STUDENT_UPDATE = "UPDATE schedule.students SET student_id = ?, group_id = ?, first_name = ?, last_name = ?, email = ?, status = ? WHERE student_id = ?";
+    private static final String PROPERTY_STUDENT_GET_BY_ID = "SELECT student_id, group_id, first_name, last_name, email, password, status FROM schedule.students WHERE student_id = ";
     private static final String PROPERTY_STUDENT_GET_ALL = "SELECT * FROM schedule.students";
     private static final String PROPERTY_STUDENT_DELETE = "DELETE FROM schedule.students WHERE student_id = ?";
     private static final String PROPERTY_STUDENT_COURSE_ADD = "INSERT INTO schedule.students_courses(student_id, course_id) VALUES (?, ?)";
     private static final String PROPERTY_STUDENT_COURSE_DELETE = "DELETE FROM schedule.students_courses WHERE student_id = ? and course_id = ?";
     private static final String DEFAULT_GROUP_ID = "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2";
 
-    public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
-	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Student.class), PROPERTY_STUDENT_ADD, PROPERTY_STUDENT_GET_BY_ID, PROPERTY_STUDENT_GET_ALL,
+    public StudentDaoImpl(JdbcTemplate jdbcTemplate, IdProvider idProvider) {
+	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Student.class), idProvider, PROPERTY_STUDENT_ADD, PROPERTY_STUDENT_GET_BY_ID, PROPERTY_STUDENT_GET_ALL,
 		PROPERTY_STUDENT_UPDATE, PROPERTY_STUDENT_DELETE);
     }
 
@@ -56,21 +57,28 @@ public class StudentDaoImpl extends AbstractDaoImpl<Student> implements StudentD
     
     @Override
     public void createStudent(String firstName, String lastName) {
-	Student student = new Student(DEFAULT_GROUP_ID, firstName, lastName);
+	Student student = new Student(DEFAULT_GROUP_ID, firstName, lastName, Status.STUDENT);
 	addStudentToBase(student);
     }
 
     @Override
     protected Object[] insertSave(Student entity) {
-	Object[] params = {UUID.randomUUID().toString(), entity.getGroupId(), entity.getFirstName(), entity.getLastName()};
-	
+	Object[] params = { idProvider.generateUUID(), entity.getGroupId(), entity.getFirstName(), entity.getLastName(),
+		entity.getEmail(), entity.getPassword(), entity.getStatus().getStatus() };
+
 	return params;
     }
 
     @Override
     protected Object[] insertUpdate(Student entity) {
-	Object[] params = {entity.getStudentId(), entity.getGroupId(), entity.getFirstName(), entity.getLastName(), entity.getStudentId()};
+	Object[] params = {entity.getStudentId(), entity.getGroupId(), entity.getFirstName(), entity.getLastName(),
+		entity.getEmail(), entity.getPassword(), entity.getStatus().getStatus()};
 	
 	return params;
+    }
+
+    @Override
+    public void update(String squery, Object[] params) {
+	jdbcTemplate.update(squery, params);
     }
 }

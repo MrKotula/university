@@ -11,4 +11,6 @@ public interface StudentDao extends Dao<Student, Integer> {
     List<Student> getStudentsWithCourseName(String courseName);
     
     void createStudent(String firstName, String lastName);
+    
+    void update(String squery, Object[] params);
 }

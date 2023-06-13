@@ -1,13 +1,13 @@
 package ua.foxminded.university.dao.impl;
 
 import java.util.List;
-import java.util.UUID;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.foxminded.university.dao.CourseDao;
 import ua.foxminded.university.entity.Course;
+import ua.foxminded.university.tools.IdProvider;
 
 @Transactional
 @Repository
@@ -18,8 +18,9 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     private static final String PROPERTY_COURSE_UPDATE = "UPDATE schedule.courses SET course_id = ?, course_name = ?, course_description = ? WHERE course_id = ?";
     private static final String PROPERTY_COURSE_DELETE = "DELETE FROM schedule.courses WHERE course_id = ?";
     
-    public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
-	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Course.class), PROPERTY_COURSE_ADD, PROPERTY_COURSE_GET_BY_ID, PROPERTY_COURSE_GET_ALL,
+
+    public CourseDaoImpl(JdbcTemplate jdbcTemplate, IdProvider idProvider) {
+	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Course.class), idProvider, PROPERTY_COURSE_ADD, PROPERTY_COURSE_GET_BY_ID, PROPERTY_COURSE_GET_ALL,
 		PROPERTY_COURSE_UPDATE, PROPERTY_COURSE_DELETE);
     }
 
@@ -43,7 +44,7 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     
    @Override
     protected Object[] insertSave(Course entity) {
-	Object[] params = {UUID.randomUUID().toString(), entity.getCourseName(), entity.getCourseDescription()};
+	Object[] params = {idProvider.generateUUID(), entity.getCourseName(), entity.getCourseDescription()};
 	
 	return params;
     }

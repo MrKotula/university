@@ -24,9 +24,15 @@
         <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
         <testconteinerspostgres.verion>1.17.3</testconteinerspostgres.verion>
         <lombok.verion>1.18.24</lombok.verion>
+        <spring-security-core.verion>6.1.0</spring-security-core.verion>
     </properties>
     
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring-security-core.verion}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -108,6 +114,7 @@
                         <exclude>ua/foxminded/university/SpringBootJdbcApiApplication.class</exclude>
                         <exclude>ua/foxminded/university/entity/*</exclude>
                         <exclude>ua/foxminded/university/dao/SpringJdbcConfig.class</exclude>
+                        <exclude>ua/foxminded/university/dto/UserDto.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
