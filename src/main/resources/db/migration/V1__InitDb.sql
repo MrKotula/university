@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS schedule.students
 CREATE TABLE IF NOT EXISTS schedule.courses
 (
     course_id character(36) NOT NULL,
-    course_name character varying(50) NOT NULL,
-    course_description character varying,
+    course_name character varying(24) NOT NULL,
+    course_description character varying(36),
     CONSTRAINT courses_pkey PRIMARY KEY (course_id)
 );
 

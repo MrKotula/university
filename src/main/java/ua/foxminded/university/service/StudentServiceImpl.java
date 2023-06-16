@@ -8,7 +8,7 @@ import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.Student;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.tools.Status;
-import ua.foxminded.university.validator.Validator;
+import ua.foxminded.university.validator.ValidatorUser;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -17,20 +17,20 @@ public class StudentServiceImpl implements StudentService {
     private static final String PROPERTY_STUDENT_UPDATE_STATUS = "UPDATE schedule.students SET status = ? WHERE student_id = ?";
     private static final String PROPERTY_STUDENT_CHANGE_GROUP = "UPDATE schedule.students SET group_id = ? WHERE student_id = ?";
 
-    private Validator validator;
+    private ValidatorUser validatorUser;
     private PasswordEncoder passwordEncoder;
     private StudentDao studentDao;
 
     @Autowired
-    public StudentServiceImpl(Validator validator, PasswordEncoder passwordEncoder, StudentDao studentDao) {
-	this.validator = validator;
+    public StudentServiceImpl(ValidatorUser validatorUser, PasswordEncoder passwordEncoder, StudentDao studentDao) {
+	this.validatorUser = validatorUser;
 	this.passwordEncoder = passwordEncoder;
 	this.studentDao = studentDao;
     }
 
     @Override
     public void register(String groupId, UserDto userDto) throws ValidationException {
-	validator.validateData(userDto.getEmail(), userDto.getFirstName(), userDto.getLastName());
+	validatorUser.validateData(userDto.getEmail(), userDto.getFirstName(), userDto.getLastName());
 
 	Student student = new Student(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
 		passwordEncoder.encode(userDto.getPassword()), Status.NEW);
@@ -45,7 +45,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void updateEmail(String email, String studentId) throws ValidationException {
-	validator.validateEmail(email);
+	validatorUser.validateEmail(email);
 	Object[] params = { email, studentId };
 	studentDao.update(PROPERTY_STUDENT_UPDATE_EMAIL, params);
     }

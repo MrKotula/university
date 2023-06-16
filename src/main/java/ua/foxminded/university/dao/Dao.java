@@ -14,4 +14,6 @@ public interface Dao<E, ID> {
     void update(E entity);
 
     void deleteById(String id);
+    
+    void update(String squery, Object[] params);
 }

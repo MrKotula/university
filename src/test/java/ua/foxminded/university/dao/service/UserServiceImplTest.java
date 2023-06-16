@@ -35,9 +35,10 @@ import ua.foxminded.university.dao.impl.UserDaoImpl;
 import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.User;
 import ua.foxminded.university.exceptions.ValidationException;
+import ua.foxminded.university.service.UserService;
 import ua.foxminded.university.service.UserServiceImpl;
 import ua.foxminded.university.tools.IdProvider;
-import ua.foxminded.university.validator.Validator;
+import ua.foxminded.university.validator.ValidatorUser;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -59,7 +60,7 @@ class UserServiceImplTest {
     JdbcTemplate jdbcTemplate;
     
     @Autowired
-    Validator validator;
+    ValidatorUser validatorUser;
     
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -108,8 +109,8 @@ class UserServiceImplTest {
     void verifyUseMethodRegister() throws ValidationException {
 	List<User> users = new ArrayList<>();
 	IdProvider mockedIdProvider = mock(IdProvider.class);
-	UserDao useDao = new UserDaoImpl(jdbcTemplate, mockedIdProvider);
-	userService = new UserServiceImpl(validator, passwordEncoder, useDao);
+	UserDao userDaoMocked = new UserDaoImpl(jdbcTemplate, mockedIdProvider);
+	UserService userServiceMocked = new UserServiceImpl(validatorUser, passwordEncoder, userDaoMocked);
 	
 	when(mockedIdProvider.generateUUID()).thenReturn("1d95bc79-a549-4d2c-aeb5-3f929aee5563");
 	User user = new User("1d95bc79-a549-4d2c-aeb5-3f929aee5563", "TestName", "TestLastName", "testemail@ukr.net",
@@ -117,7 +118,7 @@ class UserServiceImplTest {
 	
 	users.add(testUserSecond);
 	users.add(user);
-	userService.register(new UserDto("TestName", "TestLastName", "testemail@ukr.net", "12345678"));
+	userServiceMocked.register(new UserDto("TestName", "TestLastName", "testemail@ukr.net", "12345678"));
 
 	assertEquals(users, userDao.findAll(null));
     }
@@ -172,7 +173,7 @@ class UserServiceImplTest {
     @Test
     @Transactional
     void shouldReturnValidationExceptionWhenNameOrSurnameHaveSpecialSymbols() throws ValidationException {
-	String expectedMessage = "First name or last name cannot contain special characters!";
+	String expectedMessage = "Data cannot contain special characters!";
 	Exception exception = assertThrows(ValidationException.class, () -> userService.register(new UserDto("TestNameTestNam@", "TestLastNameTes^", "testema@ilukr.net", "12345678")));
 	
 	assertEquals(expectedMessage, exception.getMessage());
@@ -181,7 +182,7 @@ class UserServiceImplTest {
     @Test
     @Transactional
     void shouldReturnValidationExceptionWhenSurnameHaveSpecialSymbols() throws ValidationException {
-	String expectedMessage = "First name or last name cannot contain special characters!";
+	String expectedMessage = "Data cannot contain special characters!";
 	Exception exception = assertThrows(ValidationException.class, () -> userService.register(new UserDto("TestNameTestNam", "TestLastNameTes#", "testema@ilukr.net", "12345678")));
 	
 	assertEquals(expectedMessage, exception.getMessage());

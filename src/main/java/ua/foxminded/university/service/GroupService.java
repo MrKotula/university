@@ -1,10 +1,14 @@
 package ua.foxminded.university.service;
 
-import org.springframework.stereotype.Service;
-import lombok.AllArgsConstructor;
+import java.util.List;
+import org.springframework.data.domain.Pageable;
+import ua.foxminded.university.entity.Group;
+import ua.foxminded.university.exceptions.ValidationException;
 
-@Service
-@AllArgsConstructor
-public class GroupService {
- 
+public interface GroupService {
+    void register(String groupName) throws ValidationException;
+    
+    void updateGroupName(String groupeId, String groupName) throws ValidationException;
+    
+    List<Group> getAllGroups(Pageable pageable);
 }

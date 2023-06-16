@@ -1,10 +1,16 @@
 package ua.foxminded.university.service;
 
-import org.springframework.stereotype.Service;
-import lombok.AllArgsConstructor;
+import java.util.List;
+import org.springframework.data.domain.Pageable;
+import ua.foxminded.university.entity.Course;
+import ua.foxminded.university.exceptions.ValidationException;
 
-@Service
-@AllArgsConstructor
-public class CourseService {
-   
+public interface CourseService {
+    void register(String courseName, String courseDescription) throws ValidationException;
+    
+    void updateCourseName(String courseId, String courseName) throws ValidationException;
+    
+    void updateCourseDescription(String courseId, String courseDescription) throws ValidationException;
+    
+    List<Course> getAllCourses(Pageable pageable);
 }

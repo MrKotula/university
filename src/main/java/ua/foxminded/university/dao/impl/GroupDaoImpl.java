@@ -47,4 +47,9 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
 	
 	return params;
     }
+    
+    @Override
+    public void update(String squery, Object[] params) {
+	jdbcTemplate.update(squery, params);
+    }
 }

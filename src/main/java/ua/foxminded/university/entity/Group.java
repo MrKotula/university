@@ -16,4 +16,8 @@ public class Group {
 	this.groupId = groupId;
 	this.groupName = groupName;
     }
+    
+    public Group(String groupName) {
+	this.groupName = groupName;
+    }
 }

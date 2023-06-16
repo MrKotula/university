@@ -55,4 +55,9 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
        
        return params;
    }
+   
+   @Override
+   public void update(String squery, Object[] params) {
+	jdbcTemplate.update(squery, params);
+   }
 }
