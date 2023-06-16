@@ -6,28 +6,21 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import lombok.AllArgsConstructor;
 import ua.foxminded.university.dao.Dao;
+import ua.foxminded.university.tools.IdProvider;
 
+@AllArgsConstructor
 public abstract class AbstractDaoImpl<T> implements Dao<T, Integer> {
     protected final JdbcTemplate jdbcTemplate;
     private final BeanPropertyRowMapper<T> rowMapper;
+    protected final IdProvider idProvider;
     
     private final String saveQuery;
     private final String findByIdQuery;
     private final String findAllQuery;
     private final String updateQuery;
     private final String deleteByIdQuery;
-
-    protected AbstractDaoImpl(JdbcTemplate jdbcTemplate, BeanPropertyRowMapper<T> rowMapper, String saveQuery, String findByIdQuery,
-	    String findAllQuery, String updateQuery, String deleteByIdQuery) {
-	this.jdbcTemplate = jdbcTemplate;
-	this.rowMapper = rowMapper;
-	this.saveQuery = saveQuery;
-	this.findByIdQuery = findByIdQuery;
-	this.findAllQuery = findAllQuery;
-	this.updateQuery = updateQuery;
-	this.deleteByIdQuery = deleteByIdQuery;
-    }
     
     @Override
     public Optional<T> findById(String id) {

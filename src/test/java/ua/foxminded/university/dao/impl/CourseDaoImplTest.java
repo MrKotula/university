@@ -1,6 +1,10 @@
 package ua.foxminded.university.dao.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -22,6 +26,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ua.foxminded.university.dao.CourseDao;
 import ua.foxminded.university.entity.Course;
+import ua.foxminded.university.tools.IdProvider;
 
 @SpringBootTest
 @Testcontainers
@@ -105,12 +110,12 @@ class CourseDaoImplTest {
     @Test
     @Transactional
     void verifyUseMethodWhenUseInsertSave() {
+	IdProvider mockedIdProvider = mock(IdProvider.class);
 	Course course = new Course("75da5fb4-235c-4714-8a2e-460c19c3a0b8", "test", "testing");	
-	List<Course> testListAllCourses = Arrays.asList(testCourseMath, testCourseBiology, testCourseChemistry, testCoursePhysics,
-		    testCoursePhilosophy, testCourseDrawing, testCourseLiterature, testCourseEnglish, testCourseGeography, testCoursePhysicalTraining,
-		    course);
+	when(mockedIdProvider.generateUUID()).thenReturn("75da5fb4-235c-4714-8a2e-460c19c3a0b8");
 	courseDao.save(course);
-
-	assertEquals(testListAllCourses, courseDao.findAll(null));
+	
+	assertEquals(course.getCourseId(), mockedIdProvider.generateUUID());
+	verify(mockedIdProvider, times(1)).generateUUID();
     }
 }

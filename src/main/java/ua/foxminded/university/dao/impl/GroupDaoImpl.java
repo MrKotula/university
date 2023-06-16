@@ -1,13 +1,13 @@
 package ua.foxminded.university.dao.impl;
 
 import java.util.List;
-import java.util.UUID;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.foxminded.university.dao.GroupDao;
 import ua.foxminded.university.entity.Group;
+import ua.foxminded.university.tools.IdProvider;
 
 @Transactional
 @Repository
@@ -17,9 +17,9 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     private static final String PROPERTY_GROUP_GET_ALL = "SELECT * FROM schedule.groups";
     private static final String PROPERTY_GROUP_UPDATE = "UPDATE schedule.groups SET group_id = ?, group_name = ? WHERE group_id = ?";
     private static final String PROPERTY_GROUP_DELETE = "DELETE FROM schedule.groups WHERE group_id = ?";
-
-    public GroupDaoImpl(JdbcTemplate jdbcTemplate) {
-	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Group.class), PROPERTY_GROUP_ADD, PROPERTY_GROUP_GET_BY_ID, PROPERTY_GROUP_GET_ALL,
+    
+    public GroupDaoImpl(JdbcTemplate jdbcTemplate, IdProvider idProvider) {
+	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Group.class), idProvider, PROPERTY_GROUP_ADD, PROPERTY_GROUP_GET_BY_ID, PROPERTY_GROUP_GET_ALL,
 		PROPERTY_GROUP_UPDATE, PROPERTY_GROUP_DELETE);
     }
     
@@ -35,7 +35,7 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
 
     @Override
     protected Object[] insertSave(Group entity) {
-	Object[] params = {UUID.randomUUID().toString(), entity.getGroupName()};
+	Object[] params = {idProvider.generateUUID(), entity.getGroupName()};
 	
 	return params;
     }
@@ -45,5 +45,10 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
 	Object[] params = {entity.getGroupId(), entity.getGroupName(), entity.getGroupId()};
 	
 	return params;
+    }
+    
+    @Override
+    public void update(String squery, Object[] params) {
+	jdbcTemplate.update(squery, params);
     }
 }

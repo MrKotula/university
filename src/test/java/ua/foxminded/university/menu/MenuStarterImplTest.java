@@ -18,6 +18,7 @@ import ua.foxminded.university.dao.CourseDao;
 import ua.foxminded.university.dao.GroupDao;
 import ua.foxminded.university.dao.StudentDao;
 import ua.foxminded.university.entity.Student;
+import ua.foxminded.university.tools.Status;
 import ua.foxminded.university.viewprovider.View;
 import ua.foxminded.university.viewprovider.ViewProvider;
 
@@ -46,8 +47,8 @@ class MenuStarterImplTest {
     @Test
     void findAllStudentsToCourseNameCorrectResult() {
 	List<Student> result = Arrays.asList(
-		new Student("asd", "John", "Dou"),
-		new Student("daw", "Jane", "Does"));
+		new Student("asd", "as", "John", "Dou", Status.STUDENT),
+		new Student("daw", "as", "Jane", "Does", Status.STUDENT));
 	String courseName = "math";
 
 	when(viewProvider.readInt()).thenReturn(2).thenReturn(0);

@@ -1,85 +1,39 @@
 package ua.foxminded.university.entity;
 
-import java.util.Objects;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import ua.foxminded.university.tools.Status;
 
-public class Student {
+@NoArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper=false)
+public class Student extends User {
     private String studentId;
     private String groupId;
-    private String firstName;
-    private String lastName;
-
-    public Student() {
-
+    private Status status;
+    
+    public Student(String groupId, String firstName, String lastName, Status status) {
+	super(firstName, lastName);
+	this.groupId = groupId;
+	this.status = status;
     }
     
-    public Student(String groupId, String firstName, String lastName) {
-	this.groupId = groupId;
-	this.firstName = firstName;
-	this.lastName = lastName;
-    }
-
-    public Student(String studentId, String groupId, String firstName, String lastName) {
+    public Student(String studentId, String groupId, String firstName, String lastName, String email, String password, Status status) {
+	super(firstName, lastName, email, password);
 	this.studentId = studentId;
 	this.groupId = groupId;
-	this.firstName = firstName;
-	this.lastName = lastName;
+	this.status = status;
     }
-
-    public void setGroupId(String groupId) {
-	this.groupId = groupId;
+    
+    public Student(String firstName, String lastName, String email, String password, Status status) {
+	super(firstName, lastName, email, password);
+	this.status = status;
     }
-
-    public void setFirstName(String firstName) {
-	this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-	this.lastName = lastName;
-    }
-
-    public void setStudentId(String studentId) {
-	this.studentId = studentId;
-    }
-
-    public String getStudentId() {
-	return studentId;
-    }
-
-    public String getGroupId() {
-	return groupId;
-    }
-
-    public String getFirstName() {
-	return firstName;
-    }
-
-    public String getLastName() {
-	return lastName;
-    }
-
-    @Override
-    public int hashCode() {
-	return Objects.hash(firstName, groupId, lastName, studentId);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	Student other = (Student) obj;
-
-	return 	Objects.equals(firstName, other.firstName) && 
-		Objects.equals(groupId, other.groupId) && 
-		Objects.equals(lastName, other.lastName);
-    }
-
+    
     @Override
     public String toString() {
-	return "Student [studentId=" + studentId + "', groupId=" + groupId + '\'' + ", firstName=" + firstName
-		+ '\'' + ", lastName=" + lastName + "]";
+	return "Student [studentId=" + studentId + '\'' +", groupId=" + groupId + '\'' + ", firstName=" + firstName + '\'' + 
+		", lastName=" + lastName + '\'' + ", email=" + email + '\'' + ", status=" + status + "]";
     }
 }
