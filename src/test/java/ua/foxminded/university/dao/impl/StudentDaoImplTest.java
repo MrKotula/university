@@ -99,7 +99,7 @@ class StudentDaoImplTest {
     void shouldReturnListOfStudentsWhenUseGetStudentsWithCourseName() throws SQLException {
 	assertEquals(testListStudent, studentDao.getStudentsWithCourseName("math"));
     }
-
+  
     @Test
     @Transactional
     void shouldReturnListOfStudentsWhenUseRemoveStudentFromCourse() {
