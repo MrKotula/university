@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ua.foxminded.university.dao.UserDao;
 import ua.foxminded.university.entity.User;
-import ua.foxminded.university.service.impl.UserServiceImpl;
 import ua.foxminded.university.tools.IdProvider;
 
 @SpringBootTest
@@ -34,13 +32,7 @@ import ua.foxminded.university.tools.IdProvider;
 class UserDaoImplTest {
     
     @Autowired
-    UserServiceImpl userService;
-    
-    @Autowired
     UserDao userDao;
-    
-    @Autowired
-    IdProvider idProvider;
     
     User testUser = new User("1d95bc79-a549-4d2c-aeb5-3f929aee4321", "Jake", "Lucki", "JakeLucki@gmail.com", "123456@9");
     User testUserSecond = new User("1d95bc79-a549-4d2c-aeb5-3f929aee4321", "Bohdan", "Bilyk", "bohdanBilyk@gmail.com", null);
@@ -49,7 +41,6 @@ class UserDaoImplTest {
     private final static PrintStream systemOut = System.out;
     private static ByteArrayOutputStream typeOut;
     
-    @ClassRule
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.2")
 	    .withDatabaseName("integration-tests-db")
@@ -104,5 +95,15 @@ class UserDaoImplTest {
 	userDao.save(testUser);
 	
 	assertEquals(testUser.getUserId(), userDao.findById("1d95bc79-a549-4d2c-aeb5-3f929aee4321").get().getUserId());
+    }
+    
+    @Test
+    @Transactional
+    void verifyUseMethodSquery() {
+	List<User> listOfUsers = new ArrayList<>();
+	listOfUsers.add(testUserSecond);
+	String squery = "SELECT * FROM schedule.users";
+	
+	assertEquals(listOfUsers, userDao.query(squery));
     }
 }
