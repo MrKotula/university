@@ -11,7 +11,6 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -73,7 +72,6 @@ class GroupServiceImplTest {
     private final static PrintStream systemOut = System.out;
     private static ByteArrayOutputStream typeOut;
 
-    @ClassRule
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.2")
 	    .withDatabaseName("integration-tests-db").withUsername("sa").withPassword("sa");
@@ -140,5 +138,16 @@ class GroupServiceImplTest {
     @Transactional
     void verifyUseMethodGetAllCourses() {
 	assertEquals(testListOfGroups, groupService.getAllGroups(null));
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnListOfGroupsWhenUseGetGroupsWithLessEqualsStudentCount() {
+	List<Group> testListOfGroups = Arrays.asList(testGroupTT, testGroupGM,  testGroupGN, testGroupTH, testGroupYT,
+		    testGroupXI, testGroupGQ, testGroupLG, testGroupOR, testGroupIT);
+	testGroupXI.setCount(1);
+	testGroupOR.setCount(1);
+	
+        assertEquals(testListOfGroups, groupService.getGroupsWithLessEqualsStudentCount(55));
     }
 }

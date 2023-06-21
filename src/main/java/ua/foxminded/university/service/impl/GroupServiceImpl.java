@@ -24,6 +24,15 @@ public class GroupServiceImpl implements GroupService {
     }
     
     @Override
+    public List<Group> getGroupsWithLessEqualsStudentCount(int studentCount) {
+	String squery = "SELECT groups.group_id, groups.group_name, COUNT(student_id) "
+		    + "FROM schedule.groups " + "LEFT JOIN schedule.students ON groups.group_id = students.group_id "
+		    + "GROUP BY groups.group_id, groups.group_name " + "HAVING COUNT(student_id) <= " + studentCount + " ORDER BY groups.group_id";
+
+	return groupDao.query(squery);
+    }
+    
+    @Override
     public void register(String groupName) throws ValidationException {
 	validatorGroup.validateGroupName(groupName);
 	groupDao.save(new Group(groupName));

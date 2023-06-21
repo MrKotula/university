@@ -1,5 +1,6 @@
 package ua.foxminded.university.service.impl;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,14 @@ import ua.foxminded.university.validator.ValidatorUser;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+    private static final String DEFAULT_GROUP_ID = "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2";
     private static final String PROPERTY_STUDENT_UPDATE_EMAIL = "UPDATE schedule.students SET email = ? WHERE student_id = ?";
     private static final String PROPERTY_STUDENT_UPDATE_PASSWORD = "UPDATE schedule.students SET password = ? WHERE student_id = ?";
     private static final String PROPERTY_STUDENT_UPDATE_STATUS = "UPDATE schedule.students SET status = ? WHERE student_id = ?";
     private static final String PROPERTY_STUDENT_CHANGE_GROUP = "UPDATE schedule.students SET group_id = ? WHERE student_id = ?";
+    private static final String PROPERTY_STUDENT_COURSE_ADD = "INSERT INTO schedule.students_courses(student_id, course_id) VALUES (?, ?)";
+    private static final String PROPERTY_STUDENT_COURSE_DELETE = "DELETE FROM schedule.students_courses WHERE student_id = ? and course_id = ?";
+    private static final String PROPERTY_STUDENT_DELETE = "DELETE FROM schedule.students WHERE student_id = ?";
 
     private ValidatorUser validatorUser;
     private PasswordEncoder passwordEncoder;
@@ -27,6 +32,46 @@ public class StudentServiceImpl implements StudentService {
 	this.validatorUser = validatorUser;
 	this.passwordEncoder = passwordEncoder;
 	this.studentDao = studentDao;
+    }
+    
+    @Override
+    public List<Student> getStudentsWithCourseName(String courseName) {
+	String squery = "SELECT * FROM schedule.students WHERE student_id IN"
+		+ "(SELECT student_id FROM schedule.students_courses WHERE course_id IN "
+		+ "(SELECT course_id FROM schedule.courses WHERE course_name = " + "'" + courseName + "'" + "))";
+
+	return studentDao.query(squery);
+    }
+    
+    @Override
+    public void addStudentCourse(String studentId, String courseId) {
+	String sql = PROPERTY_STUDENT_COURSE_ADD;
+	Object[] params = {studentId, courseId};
+	studentDao.update(sql, params);
+    }
+
+    @Override
+    public void removeStudentFromCourse(String studentId, String courseId) {
+	String sql = PROPERTY_STUDENT_COURSE_DELETE;
+	Object[] params = {studentId, courseId};
+	studentDao.update(sql, params);
+    }
+    
+    private void addStudentToBase(Student student) {
+	studentDao.save(student);
+    }
+    
+    @Override
+    public void createStudent(String firstName, String lastName) {
+	Student student = new Student(DEFAULT_GROUP_ID, firstName, lastName, Status.STUDENT);
+	addStudentToBase(student);
+    }
+    
+    @Override
+    public void deleteById(String id) {
+	String sql = PROPERTY_STUDENT_DELETE;
+	Object[] params = {id};
+	studentDao.update(sql, params);
     }
 
     @Override

@@ -3,12 +3,12 @@ package ua.foxminded.university.menu;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import lombok.AllArgsConstructor;
-import ua.foxminded.university.dao.CourseDao;
-import ua.foxminded.university.dao.GroupDao;
-import ua.foxminded.university.dao.StudentDao;
 import ua.foxminded.university.entity.Course;
 import ua.foxminded.university.entity.Group;
 import ua.foxminded.university.entity.Student;
+import ua.foxminded.university.service.CourseService;
+import ua.foxminded.university.service.GroupService;
+import ua.foxminded.university.service.StudentService;
 import ua.foxminded.university.viewprovider.View;
 
 @Repository
@@ -23,9 +23,9 @@ public class MenuStarterImpl implements MenuStarter {
     private static final String MESSAGE_QUIT_APPLICATION = "Quitting application...";
     private static final String STUDENT_WITH_ID = "Student with id ";
 
-    private final StudentDao studentDao;
-    private final CourseDao courseDao;
-    private final GroupDao groupDao;
+    private final StudentService studentService;
+    private final CourseService courseService;
+    private final GroupService groupService;
     private final View view;
 
     @Override
@@ -73,7 +73,7 @@ public class MenuStarterImpl implements MenuStarter {
 	System.out.print("Input student count: ");
 	int studentCount = view.readInt();
 
-	List<Group> groups = groupDao.getGroupsWithLessEqualsStudentCount(studentCount);
+	List<Group> groups = groupService.getGroupsWithLessEqualsStudentCount(studentCount);
 	groups.stream().forEach(System.out::println);
     }
 
@@ -82,7 +82,7 @@ public class MenuStarterImpl implements MenuStarter {
 	System.out.print(MESSAGE_INPUT_COURSE_NAME);
 	String courseName = view.read();
 
-	List<Student> students = studentDao.getStudentsWithCourseName(courseName);
+	List<Student> students = studentService.getStudentsWithCourseName(courseName);
 	students.stream().forEach(System.out::println);
     }
 
@@ -94,7 +94,7 @@ public class MenuStarterImpl implements MenuStarter {
 	System.out.print(MESSAGE_LAST_NAME);
 	String lastName = view.read();
 	
-	studentDao.createStudent(firstName, lastName);	
+	studentService.createStudent(firstName, lastName);	
 	System.out.println("Created new student in base!");
     }
 
@@ -103,7 +103,7 @@ public class MenuStarterImpl implements MenuStarter {
 	System.out.print("Input student_id for deleting: ");
 	String studentId = view.read();
 
-	studentDao.deleteById(studentId);
+	studentService.deleteById(studentId);
 	System.out.println(STUDENT_WITH_ID + studentId + " removed!");
     }
 
@@ -112,13 +112,13 @@ public class MenuStarterImpl implements MenuStarter {
 	System.out.print(MESSAGE_INPUT_STUDENT_ID);
 	String studentId = view.read();
 
-	List<Course> courses = courseDao.getCoursesMissingForStudentId(studentId);
+	List<Course> courses = courseService.getCoursesMissingForStudentId(studentId);
 	courses.stream().forEach(System.out::println);
 	
 	System.out.print("Input course_id from list courses for adding student: ");
 	String courseId = view.read();
 
-	studentDao.addStudentCourse(studentId, courseId);
+	studentService.addStudentCourse(studentId, courseId);
 	System.out.println(STUDENT_WITH_ID + studentId + " added to course " + courseId);
     }
 
@@ -127,13 +127,13 @@ public class MenuStarterImpl implements MenuStarter {
 	System.out.print(MESSAGE_INPUT_STUDENT_ID_REMOVE);
 	String studentId = view.read();
 
-	List<Course> courses = courseDao.getCoursesForStudentId(studentId);
+	List<Course> courses = courseService.getCoursesForStudentId(studentId);
 	courses.stream().forEach(System.out::println);
 
 	System.out.print(MESSAGE_INPUT_COURSE_ID);
 	String courseId = view.read();
 
-	studentDao.removeStudentFromCourse(studentId, courseId);
+	studentService.removeStudentFromCourse(studentId, courseId);
 	System.out.println(STUDENT_WITH_ID + studentId + " removed from course " + courseId);
     }
 }

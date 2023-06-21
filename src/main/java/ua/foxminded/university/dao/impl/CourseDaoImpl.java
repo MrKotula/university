@@ -22,24 +22,6 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
 	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Course.class), idProvider, PROPERTY_COURSE_ADD, PROPERTY_COURSE_GET_BY_ID, PROPERTY_COURSE_GET_ALL,
 		PROPERTY_COURSE_UPDATE, PROPERTY_COURSE_DELETE);
     }
-
-    @Override
-    public List<Course> getCoursesForStudentId(String studentId) {
-	List<Course> listOfCourses = jdbcTemplate.query("SELECT courses.course_id, courses.course_name, courses.course_description "
-		    + "FROM schedule.courses INNER JOIN schedule.students_courses ON courses.course_id = students_courses.course_id "
-		    + "WHERE students_courses.student_id='" + studentId + "'", new BeanPropertyRowMapper<Course>(Course.class));
-
-	return listOfCourses;
-    }
-
-    @Override
-    public List<Course> getCoursesMissingForStudentId(String studentId) {
-	List<Course> listOfCourses = jdbcTemplate.query("SELECT course_id, course_name, course_description "
-		    + "FROM schedule.courses c WHERE NOT EXISTS (SELECT * FROM schedule.students_courses s_c WHERE student_id = '"
-		    + studentId + "' AND c.course_id = s_c.course_id)", new BeanPropertyRowMapper<Course>(Course.class));
-
-	return listOfCourses;
-    }
     
    @Override
     protected Object[] insertSave(Course entity) {
@@ -58,5 +40,10 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
    @Override
    public void update(String squery, Object[] params) {
 	jdbcTemplate.update(squery, params);
+   }
+   
+   @Override
+   public List<Course> query(String squery) {
+	return jdbcTemplate.query(squery, new BeanPropertyRowMapper<Course>(Course.class));
    }
 }
