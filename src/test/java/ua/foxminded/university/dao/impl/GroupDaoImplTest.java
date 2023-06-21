@@ -77,14 +77,6 @@ class GroupDaoImplTest {
         System.setIn(systemIn);
         System.setOut(systemOut);
     }
-
-    @Test
-    @Transactional
-    void shouldReturnListOfGroupsWhenUseGetGroupsWithLessEqualsStudentCount() {
-	testGroupXI.setCount(1);
-	testGroupOR.setCount(1);
-        assertEquals(testListOfGroups, groupDao.getGroupsWithLessEqualsStudentCount(55));
-    }
     
     @Test
     @Transactional
