@@ -17,7 +17,6 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     private static final String PROPERTY_COURSE_GET_BY_ID = "SELECT * FROM schedule.courses WHERE course_id =";
     private static final String PROPERTY_COURSE_UPDATE = "UPDATE schedule.courses SET course_id = ?, course_name = ?, course_description = ? WHERE course_id = ?";
     private static final String PROPERTY_COURSE_DELETE = "DELETE FROM schedule.courses WHERE course_id = ?";
-    
 
     public CourseDaoImpl(JdbcTemplate jdbcTemplate, IdProvider idProvider) {
 	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Course.class), idProvider, PROPERTY_COURSE_ADD, PROPERTY_COURSE_GET_BY_ID, PROPERTY_COURSE_GET_ALL,

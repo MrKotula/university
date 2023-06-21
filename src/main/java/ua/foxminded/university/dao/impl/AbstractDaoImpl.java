@@ -7,10 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import ua.foxminded.university.dao.Dao;
 import ua.foxminded.university.tools.IdProvider;
 
 @AllArgsConstructor
+@Log4j2
 public abstract class AbstractDaoImpl<T> implements Dao<T, Integer> {
     protected final JdbcTemplate jdbcTemplate;
     private final BeanPropertyRowMapper<T> rowMapper;
@@ -28,6 +30,7 @@ public abstract class AbstractDaoImpl<T> implements Dao<T, Integer> {
 	   return Optional.of(jdbcTemplate.queryForObject(findByIdQuery + "'" + id + "'",
 		rowMapper)); 
 	} catch (EmptyResultDataAccessException e) {
+	    log.info("Empty result: " + e);
 	    return Optional.empty();
 	}
     }
