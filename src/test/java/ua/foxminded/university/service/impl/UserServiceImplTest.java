@@ -1,4 +1,4 @@
-package ua.foxminded.university.dao.service.impl;
+package ua.foxminded.university.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,7 +11,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,6 @@ import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.User;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.UserService;
-import ua.foxminded.university.service.impl.UserServiceImpl;
 import ua.foxminded.university.tools.IdProvider;
 import ua.foxminded.university.validator.ValidatorUser;
 
@@ -67,7 +65,6 @@ class UserServiceImplTest {
     private final static PrintStream systemOut = System.out;
     private static ByteArrayOutputStream typeOut;
 
-    @ClassRule
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.2")
 	    .withDatabaseName("integration-tests-db").withUsername("sa").withPassword("sa");

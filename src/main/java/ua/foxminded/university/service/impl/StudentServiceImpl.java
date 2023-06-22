@@ -1,8 +1,8 @@
 package ua.foxminded.university.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
 import ua.foxminded.university.dao.StudentDao;
 import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.Student;
@@ -12,27 +12,21 @@ import ua.foxminded.university.tools.Status;
 import ua.foxminded.university.validator.ValidatorUser;
 
 @Service
+@AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private static final String PROPERTY_STUDENT_UPDATE_EMAIL = "UPDATE schedule.students SET email = ? WHERE student_id = ?";
     private static final String PROPERTY_STUDENT_UPDATE_PASSWORD = "UPDATE schedule.students SET password = ? WHERE student_id = ?";
     private static final String PROPERTY_STUDENT_UPDATE_STATUS = "UPDATE schedule.students SET status = ? WHERE student_id = ?";
     private static final String PROPERTY_STUDENT_CHANGE_GROUP = "UPDATE schedule.students SET group_id = ? WHERE student_id = ?";
 
-    private ValidatorUser validatorUser;
-    private PasswordEncoder passwordEncoder;
-    private StudentDao studentDao;
-
-    @Autowired
-    public StudentServiceImpl(ValidatorUser validatorUser, PasswordEncoder passwordEncoder, StudentDao studentDao) {
-	this.validatorUser = validatorUser;
-	this.passwordEncoder = passwordEncoder;
-	this.studentDao = studentDao;
-    }
+    private final ValidatorUser validatorUser;
+    private final PasswordEncoder passwordEncoder;
+    private final StudentDao studentDao;
 
     @Override
     public void register(String groupId, UserDto userDto) throws ValidationException {
 	validatorUser.validateData(userDto.getEmail(), userDto.getFirstName(), userDto.getLastName());
-
+		
 	Student student = new Student(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
 		passwordEncoder.encode(userDto.getPassword()), Status.NEW);
 	if (groupId == null) {

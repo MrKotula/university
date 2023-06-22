@@ -1,4 +1,4 @@
-package ua.foxminded.university.dao.service;
+package ua.foxminded.university.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,20 +11,16 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -34,15 +30,12 @@ import ua.foxminded.university.dao.impl.CourseDaoImpl;
 import ua.foxminded.university.entity.Course;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.CourseService;
-import ua.foxminded.university.service.CourseServiceImpl;
 import ua.foxminded.university.tools.IdProvider;
 import ua.foxminded.university.validator.ValidatorCourse;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(initializers = { CourseServiceImpTest.Initializer.class })
 @Testcontainers
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CourseServiceImpTest {
 
     @Autowired
@@ -78,7 +71,6 @@ class CourseServiceImpTest {
     private final static PrintStream systemOut = System.out;
     private static ByteArrayOutputStream typeOut;
 
-    @ClassRule
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.2")
 	    .withDatabaseName("integration-tests-db").withUsername("sa").withPassword("sa");

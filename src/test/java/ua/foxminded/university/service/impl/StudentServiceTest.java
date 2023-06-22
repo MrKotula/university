@@ -1,4 +1,4 @@
-package ua.foxminded.university.dao.service.impl;
+package ua.foxminded.university.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.ByteArrayInputStream;
@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Optional;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -50,7 +49,6 @@ class StudentServiceTest {
     private final static PrintStream systemOut = System.out;
     private static ByteArrayOutputStream typeOut;
 
-    @ClassRule
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.2")
 	    .withDatabaseName("integration-tests-db").withUsername("sa").withPassword("sa");
