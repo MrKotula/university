@@ -1,34 +1,33 @@
-package ua.foxminded.university.service;
+package ua.foxminded.university.service.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
 import ua.foxminded.university.dao.CourseDao;
 import ua.foxminded.university.entity.Course;
 import ua.foxminded.university.exceptions.ValidationException;
+import ua.foxminded.university.service.CourseService;
 import ua.foxminded.university.validator.ValidatorCourse;
 
 @Service
+@AllArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private static final String PROPERTY_COURSE_UPDATE_COURSE_NAME = "UPDATE schedule.courses SET course_name = ? WHERE course_id = ?";
     private static final String PROPERTY_COURSE_UPDATE_COURSE_DESCRIPTION = "UPDATE schedule.courses SET course_description = ? WHERE course_id = ?";
     
-    private ValidatorCourse validatorCourse;
-    private CourseDao courseDao;
-
-    @Autowired
-    public CourseServiceImpl(ValidatorCourse validatorCourse, CourseDao courseDao) {
-	this.validatorCourse = validatorCourse;
-	this.courseDao = courseDao;
-    }
+    private final ValidatorCourse validatorCourse;
+    private final CourseDao courseDao;
     
     @Override
     public void register(String courseName, String courseDescription) throws ValidationException {
 	validatorCourse.validateCourseName(courseName);
 	validatorCourse.validateCourseDescription(courseDescription);
 
-	courseDao.save(new Course(courseName, courseDescription));
+	courseDao.save(Course.builder()
+		.courseName(courseName)
+		.courseDescription(courseDescription)
+		.build());
     }
     
     @Override

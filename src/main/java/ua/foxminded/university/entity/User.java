@@ -1,6 +1,7 @@
 package ua.foxminded.university.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of= {"userId", "firstName", "lastName", "email"})
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User {
     protected String userId;
     protected String firstName;

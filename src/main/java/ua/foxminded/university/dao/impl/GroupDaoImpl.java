@@ -17,7 +17,6 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     private static final String PROPERTY_GROUP_GET_ALL = "SELECT * FROM schedule.groups";
     private static final String PROPERTY_GROUP_UPDATE = "UPDATE schedule.groups SET group_id = ?, group_name = ? WHERE group_id = ?";
     private static final String PROPERTY_GROUP_DELETE = "DELETE FROM schedule.groups WHERE group_id = ?";
-   
     
     public GroupDaoImpl(JdbcTemplate jdbcTemplate, IdProvider idProvider) {
 	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Group.class), idProvider, PROPERTY_GROUP_ADD, PROPERTY_GROUP_GET_BY_ID, PROPERTY_GROUP_GET_ALL,
