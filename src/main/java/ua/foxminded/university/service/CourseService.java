@@ -13,4 +13,8 @@ public interface CourseService {
     void updateCourseDescription(String courseId, String courseDescription) throws ValidationException;
     
     List<Course> getAllCourses(Pageable pageable);
+    
+    List<Course> getCoursesForStudentId(String studentId);
+
+    List<Course> getCoursesMissingForStudentId(String studentId);
 }

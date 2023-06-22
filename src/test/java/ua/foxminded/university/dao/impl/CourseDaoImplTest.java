@@ -9,9 +9,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -87,24 +87,10 @@ class CourseDaoImplTest {
 
     @Test
     @Transactional
-    void shouldReturnListOfCoursesWhenUseGetCoursesForStudentId() {
-        assertEquals(testListCourses, courseDao.getCoursesForStudentId("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
-    }
-    
-    @Test
-    @Transactional
-    void shouldReturnListOfCoursesWhenUseGetCoursesMissingForStudentId() {
-        assertEquals(testListAllCourses, courseDao.getCoursesMissingForStudentId("1d95bc79-a549-4d2c-aeb5-3f929aee1234"));
-    }
-    
-    @Test
-    @Transactional
     void verifyUseMethodWhenUseInsertUpdate() {
-	List<Course> courses = new ArrayList<>();
-	courses.add(testCourseBiology);
 	courseDao.update(testCourseBiology);
 
-	assertEquals(courses, courseDao.getCoursesForStudentId("33c99439-aaf0-4ebd-a07a-bd0c550d2311"));
+	assertEquals(Optional.of(testCourseBiology), courseDao.findById("1d95bc79-a549-4d2c-aeb5-3f929aee1234"));
     }
     
     @Test

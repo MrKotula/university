@@ -14,35 +14,35 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.foxminded.university.dao.CourseDao;
-import ua.foxminded.university.dao.GroupDao;
-import ua.foxminded.university.dao.StudentDao;
 import ua.foxminded.university.entity.Student;
+import ua.foxminded.university.service.CourseService;
+import ua.foxminded.university.service.GroupService;
+import ua.foxminded.university.service.StudentService;
 import ua.foxminded.university.tools.Status;
-import ua.foxminded.university.viewprovider.View;
 import ua.foxminded.university.viewprovider.ViewProvider;
+import ua.foxminded.university.viewprovider.ViewProviderImpl;
 
 @ExtendWith(MockitoExtension.class)
-class MenuStarterImplTest {
+class MenuControllerTest {
     private static final String TEST_FIRST_NAME = "First Name";
     private static final String TEST_LAST_NAME = "Last Name";
     private static final String MESSAGE_EXCEPTION_NOT_NUMBER = "You inputted not a number. Please input number ";
     private static final String COURSE_NAME = "math";
 
     @Mock
-    GroupDao groupDao;
+    GroupService groupService;
 
     @Mock
-    StudentDao studentDao;
+    StudentService studentService;
 
     @Mock
-    CourseDao courseDao;
+    CourseService courseService;
 
     @Mock
-    View viewProvider;
+    ViewProvider viewProvider;
 
     @InjectMocks
-    private MenuStarterImpl menuStarterImpl;
+    private MenuController menuController;
 
     @Test
     void findAllStudentsToCourseNameCorrectResult() {
@@ -53,13 +53,13 @@ class MenuStarterImplTest {
 
 	when(viewProvider.readInt()).thenReturn(2).thenReturn(0);
 	when(viewProvider.read()).thenReturn(courseName);
-	when(studentDao.getStudentsWithCourseName(courseName)).thenReturn(result);
+	when(studentService.getStudentsWithCourseName(courseName)).thenReturn(result);
 
-	menuStarterImpl.startMenu();
+	menuController.startMenu();
 
 	verify(viewProvider, times(2)).readInt();
 	verify(viewProvider, times(1)).read();
-	verify(studentDao, times(1)).getStudentsWithCourseName("math");
+	verify(studentService, times(1)).getStudentsWithCourseName("math");
     }
 
     @Test
@@ -70,44 +70,44 @@ class MenuStarterImplTest {
 	when(viewProvider.readInt()).thenReturn(3).thenReturn(0);
 	when(viewProvider.read()).thenReturn(name).thenReturn(surname);
 
-	menuStarterImpl.startMenu();
+	menuController.startMenu();
 
 	verify(viewProvider, times(2)).readInt();
 	verify(viewProvider, times(2)).read();
-	verify(studentDao, times(1)).createStudent(name, surname);
+	verify(studentService, times(1)).createStudent(name, surname);
     }
 
     @Test
     void ShouldReturnStudentWhenRemoveStudent() {
 	when(viewProvider.readInt()).thenReturn(4).thenReturn(0);
 	when(viewProvider.read()).thenReturn("2");
-	menuStarterImpl.startMenu();
+	menuController.startMenu();
 
 	verify(viewProvider, times(2)).readInt();
 	verify(viewProvider, times(1)).read();
-	verify(studentDao, times(1)).deleteById("2");
+	verify(studentService, times(1)).deleteById("2");
     }
 
     @Test
     void ShouldReturnStudentsWhenAddtoCourse() {
 	when(viewProvider.readInt()).thenReturn(5).thenReturn(0);
 	when(viewProvider.read()).thenReturn("2").thenReturn("1");
-	menuStarterImpl.startMenu();
+	menuController.startMenu();
 
 	verify(viewProvider, times(2)).readInt();
 	verify(viewProvider, times(2)).read();
-	verify(studentDao, times(1)).addStudentCourse("2", "1");
+	verify(studentService, times(1)).addStudentCourse("2", "1");
     }
 
     @Test
     void ShouldReturnStudentWhenRemoveFromCourse() {
 	when(viewProvider.readInt()).thenReturn(6).thenReturn(0);
 	when(viewProvider.read()).thenReturn("2").thenReturn("1");
-	menuStarterImpl.startMenu();
+	menuController.startMenu();
 
 	verify(viewProvider, times(2)).readInt();
 	verify(viewProvider, times(2)).read();
-	verify(studentDao, times(1)).removeStudentFromCourse("2", "1");
+	verify(studentService, times(1)).removeStudentFromCourse("2", "1");
     }
 
     @Test
@@ -115,7 +115,7 @@ class MenuStarterImplTest {
 	String message = "Incorrect command\n";
 	when(viewProvider.readInt()).thenReturn(7).thenReturn(0);
 
-	menuStarterImpl.startMenu();
+	menuController.startMenu();
 
 	verify(viewProvider, times(2)).readInt();
 	verify(viewProvider, times(1)).printMessage(message);
@@ -125,42 +125,42 @@ class MenuStarterImplTest {
     void givenStudentCountString_whenGetGroupsWithLessEqualsStudentCount_thenVerifyCallServicesOneTimeFromArgument() {
 	when(viewProvider.readInt()).thenReturn(1).thenReturn(0);
 
-	menuStarterImpl.startMenu();
-	ViewProvider view = new ViewProvider();
+	menuController.startMenu();
+	ViewProviderImpl view = new ViewProviderImpl();
 	view.printMessage("25");
 
-	verify(groupDao, times(1)).getGroupsWithLessEqualsStudentCount(0);
+	verify(groupService, times(1)).getGroupsWithLessEqualsStudentCount(0);
     }
 
     @Test
     void givenStringInput_whenAddStudentToCourse_thenVerifyCallServicesOneTimeFromArgument() {
 	when(viewProvider.read()).thenReturn("1", "3");
 	
-        menuStarterImpl.addStudentToCourse();
-        studentDao.addStudentCourse("1", "3");
+        menuController.addStudentToCourse();
+        studentService.addStudentCourse("1", "3");
         
-        verify(studentDao, times(2)).addStudentCourse("1", "3");
+        verify(studentService, times(2)).addStudentCourse("1", "3");
     }
 
     @Test
     void givenStudentIdString_whenDeleteById_thenVerifyCallServicesOneTimeFromArgument() {
 	when(viewProvider.read()).thenReturn("3");
 	
-        studentDao.deleteById("3");
-        menuStarterImpl.deleteStudentById();
+        studentService.deleteById("3");
+        menuController.deleteStudentById();
         
-        verify(studentDao, times(2)).deleteById("3");
+        verify(studentService, times(2)).deleteById("3");
     }
 
     @Test
     void shouldThrowException_whenDeleteById_thenVerifyCallServicesOneTimeFromArgument() {
-	doThrow(new InputMismatchException(MESSAGE_EXCEPTION_NOT_NUMBER)).when(studentDao)
+	doThrow(new InputMismatchException(MESSAGE_EXCEPTION_NOT_NUMBER)).when(studentService)
 		.deleteById("35");
 	Exception exception = assertThrows(InputMismatchException.class,
-		() -> studentDao.deleteById("35"));
+		() -> studentService.deleteById("35"));
 
 	assertEquals(MESSAGE_EXCEPTION_NOT_NUMBER, exception.getMessage());
-	verify(studentDao, times(1)).deleteById("35");
+	verify(studentService, times(1)).deleteById("35");
     }
 
     @Test
@@ -168,29 +168,29 @@ class MenuStarterImplTest {
 	String input = COURSE_NAME;
 	when(viewProvider.read()).thenReturn(input);
 
-	studentDao.getStudentsWithCourseName(input);
-	menuStarterImpl.findAllStudentsToCourseName();
+	studentService.getStudentsWithCourseName(input);
+	menuController.findAllStudentsToCourseName();
 
-	verify(studentDao, times(2)).getStudentsWithCourseName(COURSE_NAME);
+	verify(studentService, times(2)).getStudentsWithCourseName(COURSE_NAME);
     }
 
     @Test
     void givenStringInput_whenRemoveStudentFromCourse_thenVerifyCallServicesOneTimeFromArgument() {
         when(viewProvider.read()).thenReturn("3").thenReturn("3");
         
-        studentDao.removeStudentFromCourse("3", "3");
-        menuStarterImpl.removeStudentFromCourse();
+        studentService.removeStudentFromCourse("3", "3");
+        menuController.removeStudentFromCourse();
         
-        verify(studentDao, times(2)).removeStudentFromCourse("3", "3");
+        verify(studentService, times(2)).removeStudentFromCourse("3", "3");
     }
 
     @Test
     void givenStringInput_whenCreateStudent_thenVerifyCallStudentServiceOneTime() {
         when(viewProvider.read()).thenReturn(TEST_FIRST_NAME).thenReturn(TEST_LAST_NAME);
         
-        menuStarterImpl.addStudent();
-        studentDao.createStudent(TEST_FIRST_NAME, TEST_LAST_NAME);
+        menuController.addStudent();
+        studentService.createStudent(TEST_FIRST_NAME, TEST_LAST_NAME);
         
-        verify(studentDao, times(2)).createStudent(TEST_FIRST_NAME, TEST_LAST_NAME);
+        verify(studentService, times(2)).createStudent(TEST_FIRST_NAME, TEST_LAST_NAME);
     }
 }

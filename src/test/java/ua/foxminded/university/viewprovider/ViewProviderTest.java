@@ -19,14 +19,14 @@ class ViewProviderTest {
     private Scanner scanner;
 
     @InjectMocks
-    private ViewProvider viewProvider;
+    private ViewProviderImpl viewProviderImpl;
 
     @Test
     void printMessageShouldReturnMessageFromConsole() {
 	ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 	System.setOut(new PrintStream(outputStreamCaptor));
 
-	viewProvider.printMessage("word");
+	viewProviderImpl.printMessage("word");
 
 	assertThat("word").isEqualTo(outputStreamCaptor.toString().trim());
     }
@@ -36,8 +36,8 @@ class ViewProviderTest {
 	int expected = 5;
 	when(scanner.nextInt()).thenReturn(5);
 
-	viewProvider.printMessage("5");
-	int actual = viewProvider.readInt();
+	viewProviderImpl.printMessage("5");
+	int actual = viewProviderImpl.readInt();
 
 	assertThat(actual).isEqualTo(expected);
     }
@@ -47,8 +47,8 @@ class ViewProviderTest {
 	String input = "hello";
 	when(scanner.next()).thenReturn("hello");
 
-	viewProvider.printMessage(input);
-	input = viewProvider.read();
+	viewProviderImpl.printMessage(input);
+	input = viewProviderImpl.read();
 
 	assertThat("hello").isEqualTo(input);
     }
@@ -57,7 +57,7 @@ class ViewProviderTest {
     void readStringShouldReturnHasNextFromScannerMocked() {
 	when(scanner.hasNext()).thenReturn(true);
 	boolean input = true;
-	input = viewProvider.readBoolean();
+	input = viewProviderImpl.readBoolean();
 
 	assertTrue(input);
     }
