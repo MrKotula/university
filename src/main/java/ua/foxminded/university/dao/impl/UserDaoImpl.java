@@ -1,5 +1,6 @@
 package ua.foxminded.university.dao.impl;
 
+import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -39,7 +40,12 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
     }
     
     @Override
-    public void update(String squery, Object[] params) {
-	jdbcTemplate.update(squery, params);
+    public void update(String sqlQuery, Object[] params) {
+	jdbcTemplate.update(sqlQuery, params);
+    }
+    
+    @Override
+    public List<User> query(String sqlQuery) {
+ 	return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<User>(User.class));
     }
 }

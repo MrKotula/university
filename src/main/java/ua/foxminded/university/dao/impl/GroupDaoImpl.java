@@ -22,16 +22,6 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
 	super(jdbcTemplate, BeanPropertyRowMapper.newInstance(Group.class), idProvider, PROPERTY_GROUP_ADD, PROPERTY_GROUP_GET_BY_ID, PROPERTY_GROUP_GET_ALL,
 		PROPERTY_GROUP_UPDATE, PROPERTY_GROUP_DELETE);
     }
-    
-    @Override
-    public List<Group> getGroupsWithLessEqualsStudentCount(int studentCount) {
-	List<Group> listOfGroups = jdbcTemplate.query("SELECT groups.group_id, groups.group_name, COUNT(student_id) "
-		    + "FROM schedule.groups " + "LEFT JOIN schedule.students ON groups.group_id = students.group_id "
-		    + "GROUP BY groups.group_id, groups.group_name " + "HAVING COUNT(student_id) <= " + studentCount + " ORDER BY groups.group_id",
-		    new BeanPropertyRowMapper<Group>(Group.class));
-
-	return listOfGroups;
-    }
 
     @Override
     protected Object[] insertSave(Group entity) {
@@ -48,7 +38,12 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     }
     
     @Override
-    public void update(String squery, Object[] params) {
-	jdbcTemplate.update(squery, params);
+    public void update(String sqlQuery, Object[] params) {
+	jdbcTemplate.update(sqlQuery, params);
+    }
+    
+    @Override
+    public List<Group> query(String sqlQuery) {
+ 	return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<Group>(Group.class));
     }
 }

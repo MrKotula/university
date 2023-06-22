@@ -34,9 +34,9 @@ import ua.foxminded.university.tools.IdProvider;
 import ua.foxminded.university.validator.ValidatorCourse;
 
 @SpringBootTest
-@ContextConfiguration(initializers = { CourseServiceImpTest.Initializer.class })
+@ContextConfiguration(initializers = { CourseServiceImplTest.Initializer.class })
 @Testcontainers
-class CourseServiceImpTest {
+class CourseServiceImplTest {
 
     @Autowired
     CourseService courseService;
@@ -64,6 +64,7 @@ class CourseServiceImpTest {
     Course testCourseEnglish = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee7658", "English", "course of English");
     Course testCourseGeography = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee3356", "geography", "course of Geography");
     Course testCoursePhysicalTraining = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee0887", "physical training", "course of Physical training");
+    List<Course> testListCourses = Arrays.asList(testCourseMath, testCourseBiology);
     List<Course> testListAllCourses = Arrays.asList(testCourseMath, testCourseBiology, testCourseChemistry, testCoursePhysics, testCoursePhilosophy,
 	    testCourseDrawing, testCourseLiterature, testCourseEnglish, testCourseGeography, testCoursePhysicalTraining);
 
@@ -164,5 +165,17 @@ class CourseServiceImpTest {
 	Exception exception = assertThrows(ValidationException.class, () -> courseService.register("Tes@t", "TestTes@tTestTestTestTestTestTestTestT"));
 	
 	assertEquals(expectedMessage, exception.getMessage());
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnListOfCoursesWhenUseGetCoursesForStudentId() {
+        assertEquals(testListCourses, courseService.getCoursesForStudentId("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnListOfCoursesWhenUseGetCoursesMissingForStudentId() {
+        assertEquals(testListAllCourses, courseService.getCoursesMissingForStudentId("1d95bc79-a549-4d2c-aeb5-3f929aee1234"));
     }
 }

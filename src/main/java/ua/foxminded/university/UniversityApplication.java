@@ -4,18 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ua.foxminded.university.menu.MenuStarter;
+import ua.foxminded.university.menu.MenuController;
 
 @SpringBootApplication
-public class SpringBootJdbcApiApplication implements CommandLineRunner {
+public class UniversityApplication implements CommandLineRunner {
     @Autowired
-    MenuStarter menuStarter;
+    MenuController menuController;
 
     public static void main(String[] args) {
-	SpringApplication.run(SpringBootJdbcApiApplication.class, args);
+	SpringApplication.run(UniversityApplication.class, args);
     }
     
     public void run(final String... s) {
-	menuStarter.startMenu();
+	menuController.startMenu();
     }
 }

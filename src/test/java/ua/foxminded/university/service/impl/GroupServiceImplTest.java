@@ -138,4 +138,15 @@ class GroupServiceImplTest {
     void verifyUseMethodGetAllCourses() {
 	assertEquals(testListOfGroups, groupService.getAllGroups(null));
     }
+    
+    @Test
+    @Transactional
+    void shouldReturnListOfGroupsWhenUseGetGroupsWithLessEqualsStudentCount() {
+	List<Group> testListOfGroups = Arrays.asList(testGroupTT, testGroupGM,  testGroupGN, testGroupTH, testGroupYT,
+		    testGroupXI, testGroupGQ, testGroupLG, testGroupOR, testGroupIT);
+	testGroupXI.setCount(1);
+	testGroupOR.setCount(1);
+	
+        assertEquals(testListOfGroups, groupService.getGroupsWithLessEqualsStudentCount(55));
+    }
 }

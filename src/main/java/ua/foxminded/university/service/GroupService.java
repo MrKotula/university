@@ -11,4 +11,6 @@ public interface GroupService {
     void updateGroupName(String groupeId, String groupName) throws ValidationException;
     
     List<Group> getAllGroups(Pageable pageable);
+    
+    List<Group> getGroupsWithLessEqualsStudentCount(int studentCount);
 }
