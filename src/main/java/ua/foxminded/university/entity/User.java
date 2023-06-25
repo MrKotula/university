@@ -1,5 +1,11 @@
 package ua.foxminded.university.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,12 +16,26 @@ import lombok.ToString;
 @EqualsAndHashCode(of= {"userId", "firstName", "lastName", "email"})
 @AllArgsConstructor
 @NoArgsConstructor
+@MappedSuperclass
+@Table(name="users", schema = "schedule")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
     protected String userId;
+    
+    @Column(name = "first_name")
     protected String firstName;
+    
+    @Column(name = "last_name")
     protected String lastName;
+    
+    @Column(name = "email")
     protected String email;
-    @ToString.Exclude protected String password;
+    
+    @Column(name = "password")
+    @ToString.Exclude 
+    protected String password;
     
     public User(String firstName, String lastName, String email, String password) {
 	this.firstName = firstName;
