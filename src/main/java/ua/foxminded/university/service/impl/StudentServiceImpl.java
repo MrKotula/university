@@ -16,13 +16,13 @@ import ua.foxminded.university.validator.ValidatorUser;
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private static final String DEFAULT_GROUP_ID = "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2";
-    private static final String PROPERTY_STUDENT_UPDATE_EMAIL = "UPDATE schedule.students SET email = ? WHERE student_id = ?";
-    private static final String PROPERTY_STUDENT_UPDATE_PASSWORD = "UPDATE schedule.students SET password = ? WHERE student_id = ?";
-    private static final String PROPERTY_STUDENT_UPDATE_STATUS = "UPDATE schedule.students SET status = ? WHERE student_id = ?";
-    private static final String PROPERTY_STUDENT_CHANGE_GROUP = "UPDATE schedule.students SET group_id = ? WHERE student_id = ?";
-    private static final String PROPERTY_STUDENT_COURSE_ADD = "INSERT INTO schedule.students_courses(student_id, course_id) VALUES (?, ?)";
-    private static final String PROPERTY_STUDENT_COURSE_DELETE = "DELETE FROM schedule.students_courses WHERE student_id = ? and course_id = ?";
-    private static final String PROPERTY_STUDENT_DELETE = "DELETE FROM schedule.students WHERE student_id = ?";
+    private static final String PROPERTY_STUDENT_UPDATE_EMAIL = "UPDATE schedule.students SET email = ? WHERE user_id = ?";
+    private static final String PROPERTY_STUDENT_UPDATE_PASSWORD = "UPDATE schedule.students SET password = ? WHERE user_id = ?";
+    private static final String PROPERTY_STUDENT_UPDATE_STATUS = "UPDATE schedule.students SET status = ? WHERE user_id = ?";
+    private static final String PROPERTY_STUDENT_CHANGE_GROUP = "UPDATE schedule.students SET group_id = ? WHERE user_id = ?";
+    private static final String PROPERTY_STUDENT_COURSE_ADD = "INSERT INTO schedule.students_courses(user_id, course_id) VALUES (?, ?)";
+    private static final String PROPERTY_STUDENT_COURSE_DELETE = "DELETE FROM schedule.students_courses WHERE user_id = ? and course_id = ?";
+    private static final String PROPERTY_STUDENT_DELETE = "DELETE FROM schedule.students WHERE user_id = ?";
 
     private final ValidatorUser validatorUser;
     private final PasswordEncoder passwordEncoder;
@@ -30,8 +30,8 @@ public class StudentServiceImpl implements StudentService {
     
     @Override
     public List<Student> getStudentsWithCourseName(String courseName) {
-	String squery = "SELECT * FROM schedule.students WHERE student_id IN"
-		+ "(SELECT student_id FROM schedule.students_courses WHERE course_id IN "
+	String squery = "SELECT * FROM schedule.students WHERE user_id IN"
+		+ "(SELECT user_id FROM schedule.students_courses WHERE course_id IN "
 		+ "(SELECT course_id FROM schedule.courses WHERE course_name = " + "'" + courseName + "'" + "))";
 
 	return studentDao.query(squery);
