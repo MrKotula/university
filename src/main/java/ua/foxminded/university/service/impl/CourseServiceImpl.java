@@ -18,7 +18,6 @@ public class CourseServiceImpl implements CourseService {
     
     private final ValidatorCourse validatorCourse;
     private final CourseDao courseDao;
-
     
     @Override
     public List<Course> getCoursesForStudentId(String studentId) {
