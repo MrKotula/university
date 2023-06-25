@@ -38,12 +38,12 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
    }
    
    @Override
-   public void update(String squery, Object[] params) {
-	jdbcTemplate.update(squery, params);
+   public void update(String sqlQuery, Object[] params) {
+	jdbcTemplate.update(sqlQuery, params);
    }
    
    @Override
-   public List<Course> query(String squery) {
-	return jdbcTemplate.query(squery, new BeanPropertyRowMapper<Course>(Course.class));
+   public List<Course> query(String sqlQuery) {
+	return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<Course>(Course.class));
    }
 }

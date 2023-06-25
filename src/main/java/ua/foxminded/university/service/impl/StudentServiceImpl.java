@@ -1,9 +1,9 @@
 package ua.foxminded.university.service.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
 import ua.foxminded.university.dao.StudentDao;
 import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.Student;
@@ -13,6 +13,7 @@ import ua.foxminded.university.tools.Status;
 import ua.foxminded.university.validator.ValidatorUser;
 
 @Service
+@AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private static final String DEFAULT_GROUP_ID = "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2";
     private static final String PROPERTY_STUDENT_UPDATE_EMAIL = "UPDATE schedule.students SET email = ? WHERE student_id = ?";
@@ -23,16 +24,9 @@ public class StudentServiceImpl implements StudentService {
     private static final String PROPERTY_STUDENT_COURSE_DELETE = "DELETE FROM schedule.students_courses WHERE student_id = ? and course_id = ?";
     private static final String PROPERTY_STUDENT_DELETE = "DELETE FROM schedule.students WHERE student_id = ?";
 
-    private ValidatorUser validatorUser;
-    private PasswordEncoder passwordEncoder;
-    private StudentDao studentDao;
-
-    @Autowired
-    public StudentServiceImpl(ValidatorUser validatorUser, PasswordEncoder passwordEncoder, StudentDao studentDao) {
-	this.validatorUser = validatorUser;
-	this.passwordEncoder = passwordEncoder;
-	this.studentDao = studentDao;
-    }
+    private final ValidatorUser validatorUser;
+    private final PasswordEncoder passwordEncoder;
+    private final StudentDao studentDao;
     
     @Override
     public List<Student> getStudentsWithCourseName(String courseName) {

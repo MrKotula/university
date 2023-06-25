@@ -40,12 +40,12 @@ public class StudentDaoImpl extends AbstractDaoImpl<Student> implements StudentD
     }
 
     @Override
-    public void update(String squery, Object[] params) {
-	jdbcTemplate.update(squery, params);
+    public void update(String sqlQuery, Object[] params) {
+	jdbcTemplate.update(sqlQuery, params);
     }
     
     @Override
-    public List<Student> query(String squery) {
- 	return jdbcTemplate.query(squery, new BeanPropertyRowMapper<Student>(Student.class));
+    public List<Student> query(String sqlQuery) {
+ 	return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<Student>(Student.class));
     }
 }

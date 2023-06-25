@@ -38,12 +38,12 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
     }
     
     @Override
-    public void update(String squery, Object[] params) {
-	jdbcTemplate.update(squery, params);
+    public void update(String sqlQuery, Object[] params) {
+	jdbcTemplate.update(sqlQuery, params);
     }
     
     @Override
-    public List<Group> query(String squery) {
- 	return jdbcTemplate.query(squery, new BeanPropertyRowMapper<Group>(Group.class));
+    public List<Group> query(String sqlQuery) {
+ 	return jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper<Group>(Group.class));
     }
 }
