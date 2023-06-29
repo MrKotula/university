@@ -89,7 +89,7 @@ class GroupDaoImplTest {
     @Test
     @Transactional
     void verifyUseMethodWhenUseInsertSave() {
-	Group testGroupHH = new Group("3c01e6f1-762e-43b8-a6e1-7cf493ce9232", "HH-33");
+	Group testGroupHH = new Group("HH-33");
 	groupDao.save(testGroupHH);
 
 	assertEquals(testGroupOR.getGroupName(), groupDao.findById("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2").get().getGroupName());

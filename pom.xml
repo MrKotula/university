@@ -6,8 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.10</version>
-        <relativePath />
+        <version>3.1.0</version>
     </parent>
     
     <groupId>ua.foxminded</groupId>
@@ -17,14 +16,15 @@
     <description>Demo project for Spring Boot</description>
     
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <testcontainers.version>1.17.6</testcontainers.version>
         <postgres.version>42.6.0</postgres.version>
-        <jpa.version>2.7.5</jpa.version>
+        <jpa.version>3.1.0</jpa.version>
         <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
         <testconteinerspostgres.verion>1.17.3</testconteinerspostgres.verion>
         <lombok.verion>1.18.24</lombok.verion>
         <spring-security-core.verion>6.1.0</spring-security-core.verion>
+        <maven-surefire.verion>3.1.2</maven-surefire.verion>
     </properties>
     
     <dependencies>
@@ -106,6 +106,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire.verion}</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

@@ -18,24 +18,13 @@ public class CourseServiceImpl implements CourseService {
     
     private final ValidatorCourse validatorCourse;
     private final CourseDao courseDao;
-    
-    @Override
-    public void register(String courseName, String courseDescription) throws ValidationException {
-	validatorCourse.validateCourseName(courseName);
-	validatorCourse.validateCourseDescription(courseDescription);
-
-	courseDao.save(Course.builder()
-		.courseName(courseName)
-		.courseDescription(courseDescription)
-		.build());
-    }
 
     
     @Override
     public List<Course> getCoursesForStudentId(String studentId) {
 	String squery = "SELECT courses.course_id, courses.course_name, courses.course_description "
 		    + "FROM schedule.courses INNER JOIN schedule.students_courses ON courses.course_id = students_courses.course_id "
-		    + "WHERE students_courses.student_id='" + studentId + "'";
+		    + "WHERE students_courses.user_id='" + studentId + "'";
 	
 	return courseDao.query(squery);
     }
@@ -43,10 +32,18 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getCoursesMissingForStudentId(String studentId) {
 	String squery = "SELECT course_id, course_name, course_description "
-		    + "FROM schedule.courses c WHERE NOT EXISTS (SELECT * FROM schedule.students_courses s_c WHERE student_id = '"
+		    + "FROM schedule.courses c WHERE NOT EXISTS (SELECT * FROM schedule.students_courses s_c WHERE user_id = '"
 		    + studentId + "' AND c.course_id = s_c.course_id)";
 
 	return courseDao.query(squery);
+    }
+    
+    @Override
+    public void register(String courseName, String courseDescription) throws ValidationException {
+	validatorCourse.validateCourseName(courseName);
+	validatorCourse.validateCourseDescription(courseDescription);
+
+	courseDao.save(new Course(courseName, courseDescription));
     }
     
     @Override

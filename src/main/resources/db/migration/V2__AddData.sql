@@ -20,12 +20,9 @@ insert into schedule.courses (course_id, course_name, course_description) values
 insert into schedule.courses (course_id, course_name, course_description) values ('1d95bc79-a549-4d2c-aeb5-3f929aee3356', 'geography', 'course of Geography');
 insert into schedule.courses (course_id, course_name, course_description) values ('1d95bc79-a549-4d2c-aeb5-3f929aee0887', 'physical training', 'course of Physical training');
 
-insert into schedule.students (student_id, group_id, first_name, last_name, status) values ('33c99439-aaf0-4ebd-a07a-bd0c550db4e1', '3c01e6f1-762e-43b8-a6e1-7cf493ce92e2', 'John', 'Doe', 'STUDENT');
-insert into schedule.students (student_id, group_id, first_name, last_name, status) values ('33c99439-aaf0-4ebd-a07a-bd0c550d2311', '3c01e6f1-762e-43b8-a6e1-7cf493ce5325',  'Jane', 'Does', 'STUDENT');
+insert into schedule.students (user_id, group_id, first_name, last_name, status) values ('33c99439-aaf0-4ebd-a07a-bd0c550db4e1', '3c01e6f1-762e-43b8-a6e1-7cf493ce92e2', 'John', 'Doe', 'STUDENT');
+insert into schedule.students (user_id, group_id, first_name, last_name, status) values ('33c99439-aaf0-4ebd-a07a-bd0c550d2311', '3c01e6f1-762e-43b8-a6e1-7cf493ce5325',  'Jane', 'Does', 'STUDENT');
 
-insert into schedule.students_courses (student_id, course_id) values ('33c99439-aaf0-4ebd-a07a-bd0c550db4e1', '1d95bc79-a549-4d2c-aeb5-3f929aee0f22');
-insert into schedule.students_courses (student_id, course_id) values ('33c99439-aaf0-4ebd-a07a-bd0c550db4e1', '1d95bc79-a549-4d2c-aeb5-3f929aee1234');
-insert into schedule.students_courses (student_id, course_id) values ('33c99439-aaf0-4ebd-a07a-bd0c550d2311', '1d95bc79-a549-4d2c-aeb5-3f929aee1234');
-
-insert into schedule.users(user_id, first_name, last_name, email, password) values ('1d95bc79-a549-4d2c-aeb5-3f929aee4321', 'Bohdan', 'Bilyk', 'bohdanBilyk@gmail.com', '12345678');
-
+insert into schedule.students_courses (relation_id, user_id, course_id) values ('33c99439-aaf0-4ebd-a07a-bd0c55094712', '33c99439-aaf0-4ebd-a07a-bd0c550db4e1', '1d95bc79-a549-4d2c-aeb5-3f929aee0f22');
+insert into schedule.students_courses (relation_id, user_id, course_id) values ('33c99439-aaf0-4ebd-a07a-bd0c550hglei', '33c99439-aaf0-4ebd-a07a-bd0c550db4e1', '1d95bc79-a549-4d2c-aeb5-3f929aee1234');
+insert into schedule.students_courses (relation_id, user_id, course_id) values ('33c99439-aaf0-4ebd-a07a-bd0c550pyurs', '33c99439-aaf0-4ebd-a07a-bd0c550d2311', '1d95bc79-a549-4d2c-aeb5-3f929aee1234');

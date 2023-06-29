@@ -1,5 +1,6 @@
 package ua.foxminded.university.dao.impl;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
@@ -100,7 +102,7 @@ class StudentDaoImplTest {
 
     @Test
     @Transactional
-    void shouldReturnOptionalEmptyWhenTableIsEmptyFindById() {
-	assertEquals(Optional.empty(), studentDao.findById("555"));
+    void shouldThrowsEmptyResultDataAccessExceptionWhenTableIsEmptyFindById() {
+	assertThrows(EmptyResultDataAccessException.class, () -> studentDao.findById("555"));
     }
 }

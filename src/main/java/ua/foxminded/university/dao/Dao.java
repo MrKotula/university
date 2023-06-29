@@ -14,8 +14,4 @@ public interface Dao<E, ID> {
     void update(E entity);
 
     void deleteById(String id);
-    
-    void update(String sqlQuery, Object[] params);
-    
-    List<E> query(String sqlQuery);
 }

@@ -1,10 +1,6 @@
 package ua.foxminded.university.dao.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -18,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +24,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ua.foxminded.university.dao.CourseDao;
 import ua.foxminded.university.entity.Course;
-import ua.foxminded.university.tools.IdProvider;
 
 @SpringBootTest
 @Testcontainers
@@ -96,12 +93,10 @@ class CourseDaoImplTest {
     @Test
     @Transactional
     void verifyUseMethodWhenUseInsertSave() {
-	IdProvider mockedIdProvider = mock(IdProvider.class);
-	Course course = new Course("75da5fb4-235c-4714-8a2e-460c19c3a0b8", "test", "testing");	
-	when(mockedIdProvider.generateUUID()).thenReturn("75da5fb4-235c-4714-8a2e-460c19c3a0b8");
+	Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
+	Course course = new Course("test", "testing");	
 	courseDao.save(course);
 	
-	assertEquals(course.getCourseId(), mockedIdProvider.generateUUID());
-	verify(mockedIdProvider, times(1)).generateUUID();
+	assertEquals(course.getCourseName(), courseDao.findAll(firstPageWithTwoElements).get(10).getCourseName());
     }
 }

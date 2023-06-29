@@ -1,16 +1,28 @@
 package ua.foxminded.university.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ua.foxminded.university.tools.Status;
 
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper=false)
+@ToString(callSuper = true)
+@Entity
+@Table(name="students", schema = "schedule")
 public class Student extends User {
-    private String studentId;
+    
+    @Column(name = "groupId")
     private String groupId;
+    
+    @Enumerated(EnumType.STRING)
     private Status status;
     
     public Student(String groupId, String firstName, String lastName, Status status) {
@@ -19,9 +31,14 @@ public class Student extends User {
 	this.status = status;
     }
     
-    public Student(String studentId, String groupId, String firstName, String lastName, String email, String password, Status status) {
+    public Student(String groupId, String firstName, String lastName, String email, String password, Status status) {
 	super(firstName, lastName, email, password);
-	this.studentId = studentId;
+	this.groupId = groupId;
+	this.status = status;
+    }
+    
+    public Student(String userId, String groupId, String firstName, String lastName, String email, String password, Status status) {
+	super(userId, firstName, lastName, email, password);
 	this.groupId = groupId;
 	this.status = status;
     }
@@ -29,11 +46,5 @@ public class Student extends User {
     public Student(String firstName, String lastName, String email, String password, Status status) {
 	super(firstName, lastName, email, password);
 	this.status = status;
-    }
-    
-    @Override
-    public String toString() {
-	return "Student [studentId=" + studentId + '\'' +", groupId=" + groupId + '\'' + ", firstName=" + firstName + '\'' + 
-		", lastName=" + lastName + '\'' + ", email=" + email + '\'' + ", status=" + status + "]";
     }
 }
