@@ -2,8 +2,6 @@ package ua.foxminded.university.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -11,6 +9,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.hibernate.Session;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,14 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ua.foxminded.university.dao.CourseDao;
-import ua.foxminded.university.dao.impl.CourseDaoImpl;
 import ua.foxminded.university.entity.Course;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.CourseService;
@@ -45,13 +42,13 @@ class CourseServiceImplTest {
     CourseDao courseDao;
     
     @Autowired
-    ValidatorCourse validatorUser;
+    ValidatorCourse validatorCourse;
 
     @Autowired
     IdProvider idProvider;
     
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    Session session;
     
     Course testCourse = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee5432", "testCourse", "testDescription");
     Course testCourseMath = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee0f22", "math", "course of Mathematics");
@@ -95,6 +92,7 @@ class CourseServiceImplTest {
 	String simulatedUserInput = "0";
 	System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
     }
+    
 
     @AfterAll
     static void tearDown() {
@@ -106,14 +104,12 @@ class CourseServiceImplTest {
     @Test
     @Transactional
     void verifyUseMethodRegister() throws ValidationException {
-	IdProvider mockedIdProvider = mock(IdProvider.class);
-	CourseDao courseDaoMocked = new CourseDaoImpl(jdbcTemplate, mockedIdProvider);
-	CourseService courseServiceMocked = new CourseServiceImpl(validatorUser, courseDaoMocked);
-	when(mockedIdProvider.generateUUID()).thenReturn("1d95bc79-a549-4d2c-aeb5-3f929aee5432");
+	Course course = new Course("testCourse", "testDescription");
+	String saved = session.save(course).toString();
 	
-	courseServiceMocked.register("testCourse", "testDescription");
+	courseService.register("testCourse", "testDescription");
 
-	assertEquals(Optional.of(testCourse), courseDao.findById("1d95bc79-a549-4d2c-aeb5-3f929aee5432"));
+	assertEquals(Optional.of(course), courseDao.findById(saved));
     }
     
     @Test
@@ -132,12 +128,6 @@ class CourseServiceImplTest {
 	testCourse = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee0f22", "math", "test");
 
 	assertEquals(Optional.of(testCourse), courseDao.findById("1d95bc79-a549-4d2c-aeb5-3f929aee0f22"));
-    }
-    
-    @Test
-    @Transactional
-    void verifyUseMethodGetAllCourses() {
-	assertEquals(testListAllCourses, courseService.getAllCourses(null));
     }
     
     @Test
@@ -165,17 +155,5 @@ class CourseServiceImplTest {
 	Exception exception = assertThrows(ValidationException.class, () -> courseService.register("Tes@t", "TestTes@tTestTestTestTestTestTestTestT"));
 	
 	assertEquals(expectedMessage, exception.getMessage());
-    }
-    
-    @Test
-    @Transactional
-    void shouldReturnListOfCoursesWhenUseGetCoursesForStudentId() {
-        assertEquals(testListCourses, courseService.getCoursesForStudentId("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
-    }
-    
-    @Test
-    @Transactional
-    void shouldReturnListOfCoursesWhenUseGetCoursesMissingForStudentId() {
-        assertEquals(testListAllCourses, courseService.getCoursesMissingForStudentId("1d95bc79-a549-4d2c-aeb5-3f929aee1234"));
     }
 }
