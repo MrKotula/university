@@ -94,4 +94,15 @@ class GroupDaoImplTest {
 
 	assertEquals(testGroupOR.getGroupName(), groupDao.findById("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2").get().getGroupName());
     }
+    
+    @Test
+    @Transactional
+    void shouldReturnListOfGroupsWhenUseGetGroupsWithLessEqualsStudentCount() {
+	List<Group> testListOfGroups = Arrays.asList(testGroupTT, testGroupGM, testGroupGN, testGroupTH, testGroupYT,
+		    testGroupXI, testGroupGQ, testGroupLG, testGroupOR, testGroupIT);
+	testGroupXI.setCount(1);
+	testGroupOR.setCount(1);
+	
+        assertEquals(testListOfGroups, groupDao.getGroupsWithLessEqualsStudentCount(55));
+    }
 }

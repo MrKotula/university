@@ -2,7 +2,6 @@ package ua.foxminded.university.dao.impl;
 
 import java.util.List;
 import java.util.Optional;
-import org.hibernate.query.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
@@ -17,7 +16,6 @@ import ua.foxminded.university.tools.IdProvider;
 public abstract class AbstractDaoImpl<T> implements Dao<T, Integer> {
     @PersistenceContext
     protected final EntityManager entityManager;
-
     protected final IdProvider idProvider;
 
     private final String findByIdQuery;
@@ -48,7 +46,6 @@ public abstract class AbstractDaoImpl<T> implements Dao<T, Integer> {
 
     @Override
     public T save(T entity) {
-	insertSave(entity);
 	entityManager.persist(entity);
 
 	return entity;
@@ -56,11 +53,6 @@ public abstract class AbstractDaoImpl<T> implements Dao<T, Integer> {
 
     @Override
     public void update(T entity) {
-	insertUpdate(entity);
-	entityManager.merge(entity);
+        entityManager.merge(entity);
     }
-
-    protected abstract T insertSave(T entity);
-
-    protected abstract Query<T> insertUpdate(T entity);
 }

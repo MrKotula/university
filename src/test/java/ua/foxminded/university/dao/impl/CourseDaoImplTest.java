@@ -39,6 +39,7 @@ class CourseDaoImplTest {
     @Autowired
     CourseDao courseDao;
     
+    Course testCourse = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee5432", "testCourse", "testDescription");
     Course testCourseMath = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee0f22", "math", "course of Mathematics");
     Course testCourseBiology = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee1234",  "biology", "course of Biology");
     Course testCourseChemistry = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee5324", "chemistry", "course of Chemistry");
@@ -98,5 +99,17 @@ class CourseDaoImplTest {
 	courseDao.save(course);
 	
 	assertEquals(course.getCourseName(), courseDao.findAll(firstPageWithTwoElements).get(10).getCourseName());
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnListOfCoursesWhenUseFindByStudentId() {
+        assertEquals(testListCourses, courseDao.findByStudentId("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnListOfCoursesWhenUseGetCoursesMissingByStudentId() {
+        assertEquals(testListAllCourses, courseDao.getCoursesMissingByStudentId("1d95bc79-a549-4d2c-aeb5-3f929aee1234"));
     }
 }

@@ -19,10 +19,11 @@ import ua.foxminded.university.tools.Status;
 @Table(name="students", schema = "schedule")
 public class Student extends User {
     
-    @Column(name = "groupId")
+    @Column(name = "group_id")
     private String groupId;
     
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
     
     public Student(String groupId, String firstName, String lastName, Status status) {
