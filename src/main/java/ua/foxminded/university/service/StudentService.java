@@ -9,15 +9,15 @@ import ua.foxminded.university.tools.Status;
 public interface StudentService {
     void register(String groupId, UserDto userDto) throws ValidationException;
     
-    void updateEmail(String email, String studentId) throws ValidationException;
+    void updateEmail(Student student) throws ValidationException;
     
-    void updatePassword(String password, String studentId);
+    void updatePassword(Student student);
     
     void updateStatus(Status status, String studentId);
     
     void changeGroup(String groupId, String studentId);
     
-    List<Student> getStudentsWithCourseName(String courseName);
+    List<Student> findByCourseName(String courseName);
     
     void addStudentCourse(String studentId, String courseId);
     

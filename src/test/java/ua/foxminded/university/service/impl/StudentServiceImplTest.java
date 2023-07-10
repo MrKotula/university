@@ -21,39 +21,29 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ua.foxminded.university.dao.StudentDao;
-import ua.foxminded.university.dao.impl.StudentDaoImpl;
 import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.Student;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.StudentService;
 import ua.foxminded.university.tools.IdProvider;
 import ua.foxminded.university.tools.Status;
-import ua.foxminded.university.validator.ValidatorUser;
 
 @SpringBootTest
-@ContextConfiguration(initializers = { StudentServiceTest.Initializer.class })
+@ContextConfiguration(initializers = { StudentServiceImplTest.Initializer.class })
 @Testcontainers
-class StudentServiceTest {
+class StudentServiceImplTest {
 
     @Autowired
     StudentService studentService;
     
     @Autowired
     StudentDao studentDao;
-    
-    @Autowired 
-    JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    IdProvider idProvider;
     
     Student testStudent = new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e1", "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2",
 	    "John", "Doe", null, null, Status.STUDENT);
@@ -113,7 +103,9 @@ class StudentServiceTest {
     @Test
     @Transactional
     void verifyUseMethodUpdateEmail() throws ValidationException {
-	studentService.updateEmail("testemail@ukr.net", "33c99439-aaf0-4ebd-a07a-bd0c550db4e1");
+	Student testStudent = new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e1", "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2",
+		    "John", "Doe", "testemail@ukr.net", null, Status.STUDENT);
+	studentService.updateEmail(testStudent);
 
 	assertEquals(Optional.of(testStudent), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
     }
@@ -121,7 +113,9 @@ class StudentServiceTest {
     @Test
     @Transactional
     void verifyUseMethodUpdatePassword() {
-	studentService.updatePassword("1234", "33c99439-aaf0-4ebd-a07a-bd0c550db4e1");
+	Student testStudent = new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e1", "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2",
+		    "John", "Doe", "testemail@ukr.net", "1234", Status.STUDENT);
+	studentService.updatePassword(testStudent);
 
 	assertEquals(Optional.of(testStudent), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
     }
@@ -157,7 +151,7 @@ class StudentServiceTest {
 	List<Student> testListStudent = Arrays.asList(new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e1",
 		"3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "John", "Doe", null, null, Status.STUDENT));
 	
-	assertEquals(testListStudent, studentService.getStudentsWithCourseName("math"));
+	assertEquals(testListStudent, studentService.findByCourseName("math"));
     }
 
     @Test
@@ -167,7 +161,7 @@ class StudentServiceTest {
 	studentService.removeStudentFromCourse("33c99439-aaf0-4ebd-a07a-bd0c550db4e1",
 		"1d95bc79-a549-4d2c-aeb5-3f929aee0f22");
 
-	assertEquals(emptyList, studentService.getStudentsWithCourseName("math"));
+	assertEquals(emptyList, studentService.findByCourseName("math"));
     }
     
     @Test
@@ -176,11 +170,10 @@ class StudentServiceTest {
 	IdProvider mockedIdProvider = mock(IdProvider.class);
 	when(mockedIdProvider.generateUUID()).thenReturn("33c99439-aaf0-4ebd-a07a-bd0c550db4e1");
 	List<Student> testListStudent = Arrays.asList(testStudent);
-	studentDao.save(new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e1", "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2",
-		"John", "Doe", "asd@sa", "123140", Status.NEW));
+	studentDao.save(new Student("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "John", "Doe", "asd@sa", "123140", Status.NEW));
 	studentService.addStudentCourse("33c99439-aaf0-4ebd-a07a-bd0c550db4e1", "1d95bc79-a549-4d2c-aeb5-3f929aee0096");
 
-	assertEquals(testListStudent, studentService.getStudentsWithCourseName("drawing"));
+	assertEquals(testListStudent, studentService.findByCourseName("drawing"));
     }
 
     @Test
@@ -197,17 +190,10 @@ class StudentServiceTest {
     @Test
     @Transactional
     void verifyUseMethodWhenUseCreateStudent() {
-	PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
-	ValidatorUser validatorUser = mock(ValidatorUser.class);
-	Student testStudent = new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e2",
-		"3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "Test", "Test", null, "null", Status.STUDENT);
-	IdProvider mockedIdProvider = mock(IdProvider.class);
-	when(mockedIdProvider.generateUUID()).thenReturn("33c99439-aaf0-4ebd-a07a-bd0c550db4e2");
-	studentDao = new StudentDaoImpl(jdbcTemplate, mockedIdProvider);
-	studentService = new StudentServiceImpl(validatorUser, passwordEncoder, studentDao);
-	
+	Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
+	Student student = new Student("3c01e6f1-762e-43b8-a6e1-7cf493ce5325", "Test", "Test", Status.NEW);
 	studentService.createStudent("Test", "Test");
 
-	assertEquals(Optional.of(testStudent), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e2"));
+	assertEquals(student.getFirstName(), studentDao.findAll(firstPageWithTwoElements).get(2).getFirstName());
     }
 }

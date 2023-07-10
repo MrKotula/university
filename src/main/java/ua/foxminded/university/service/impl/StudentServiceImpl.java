@@ -16,39 +16,24 @@ import ua.foxminded.university.validator.ValidatorUser;
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private static final String DEFAULT_GROUP_ID = "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2";
-    private static final String PROPERTY_STUDENT_UPDATE_EMAIL = "UPDATE schedule.students SET email = ? WHERE user_id = ?";
-    private static final String PROPERTY_STUDENT_UPDATE_PASSWORD = "UPDATE schedule.students SET password = ? WHERE user_id = ?";
-    private static final String PROPERTY_STUDENT_UPDATE_STATUS = "UPDATE schedule.students SET status = ? WHERE user_id = ?";
-    private static final String PROPERTY_STUDENT_CHANGE_GROUP = "UPDATE schedule.students SET group_id = ? WHERE user_id = ?";
-    private static final String PROPERTY_STUDENT_COURSE_ADD = "INSERT INTO schedule.students_courses(user_id, course_id) VALUES (?, ?)";
-    private static final String PROPERTY_STUDENT_COURSE_DELETE = "DELETE FROM schedule.students_courses WHERE user_id = ? and course_id = ?";
-    private static final String PROPERTY_STUDENT_DELETE = "DELETE FROM schedule.students WHERE user_id = ?";
-
+   
     private final ValidatorUser validatorUser;
     private final PasswordEncoder passwordEncoder;
     private final StudentDao studentDao;
     
     @Override
-    public List<Student> getStudentsWithCourseName(String courseName) {
-	String squery = "SELECT * FROM schedule.students WHERE user_id IN"
-		+ "(SELECT user_id FROM schedule.students_courses WHERE course_id IN "
-		+ "(SELECT course_id FROM schedule.courses WHERE course_name = " + "'" + courseName + "'" + "))";
-
-	return studentDao.query(squery);
+    public List<Student> findByCourseName(String courseName) {
+	return studentDao.findByCourseName(courseName);
     }
     
     @Override
     public void addStudentCourse(String studentId, String courseId) {
-	String sql = PROPERTY_STUDENT_COURSE_ADD;
-	Object[] params = {studentId, courseId};
-	studentDao.update(sql, params);
+	studentDao.addStudentCourse(studentId, courseId);
     }
 
     @Override
     public void removeStudentFromCourse(String studentId, String courseId) {
-	String sql = PROPERTY_STUDENT_COURSE_DELETE;
-	Object[] params = {studentId, courseId};
-	studentDao.update(sql, params);
+	studentDao.removeStudentFromCourse(studentId, courseId);
     }
     
     private void addStudentToBase(Student student) {
@@ -63,9 +48,7 @@ public class StudentServiceImpl implements StudentService {
     
     @Override
     public void deleteById(String id) {
-	String sql = PROPERTY_STUDENT_DELETE;
-	Object[] params = {id};
-	studentDao.update(sql, params);
+	studentDao.deleteById(id);
     }
 
     @Override
@@ -84,33 +67,24 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void updateEmail(String email, String studentId) throws ValidationException {
-	validatorUser.validateEmail(email);
-	Object[] params = { email, studentId };
-	studentDao.update(PROPERTY_STUDENT_UPDATE_EMAIL, params);
+    public void updateEmail(Student student) throws ValidationException {
+	validatorUser.validateEmail(student.getEmail());
+	
+	studentDao.update(student);
     }
 
     @Override
-    public void updatePassword(String password, String studentId) {
-	Object[] params = { passwordEncoder.encode(password), studentId };
-	studentDao.update(PROPERTY_STUDENT_UPDATE_PASSWORD, params);
+    public void updatePassword(Student student) {
+	studentDao.update(student);
     }
 
     @Override
     public void updateStatus(Status status, String studentId) {
-	Object[] params = { status.getStatus(), studentId };
-	studentDao.update(PROPERTY_STUDENT_UPDATE_STATUS, params);
+	studentDao.updateStatus(status, studentId);
     }
 
     @Override
     public void changeGroup(String groupId, String studentId) {
-	if (groupId == null) {
-	    updateStatus(Status.NEW, studentId);
-	} else {
-	    updateStatus(Status.STUDENT, studentId);
-	}
-
-	Object[] params = { groupId, studentId };
-	studentDao.update(PROPERTY_STUDENT_CHANGE_GROUP, params);
+	studentDao.changeGroup(groupId, studentId);
     }
 }
