@@ -106,7 +106,7 @@ public class MenuController {
 	viewProvider.printMessage(MESSAGE_INPUT_STUDENT_ID);
 	String studentId = viewProvider.read();
 
-	List<Course> courses = courseService.getCoursesMissingForStudentId(studentId);
+	List<Course> courses = courseService.getCoursesMissingByStudentId(studentId);
 	courses.stream().forEach(System.out::println);
 	
 	viewProvider.printMessage("Input course_id from list courses for adding student: ");
@@ -120,7 +120,7 @@ public class MenuController {
 	viewProvider.printMessage(MESSAGE_INPUT_STUDENT_ID_REMOVE);
 	String studentId = viewProvider.read();
 
-	List<Course> courses = courseService.getCoursesForStudentId(studentId);
+	List<Course> courses = courseService.findByStudentId(studentId);
 	courses.stream().forEach(System.out::println);
 
 	viewProvider.printMessage(MESSAGE_INPUT_COURSE_ID);

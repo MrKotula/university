@@ -1,5 +1,6 @@
 package ua.foxminded.university.service.impl;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import ua.foxminded.university.dao.CourseDao;
@@ -36,5 +37,15 @@ public class CourseServiceImpl implements CourseService {
 	Course course = courseDao.findById(courseId).get();
 	
 	courseDao.update(new Course(course.getCourseId(), course.getCourseName(), courseDescription));
+    }
+
+    @Override
+    public List<Course> findByStudentId(String userId) {
+	return courseDao.findByStudentId(userId);
+    }
+
+    @Override
+    public List<Course> getCoursesMissingByStudentId(String userId) {
+	return courseDao.getCoursesMissingByStudentId(userId);
     }
 }
