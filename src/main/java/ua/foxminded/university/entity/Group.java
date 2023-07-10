@@ -1,12 +1,13 @@
 package ua.foxminded.university.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class Group {
     @Column(name = "group_name")
     private String groupName;
     
-    @Transient
+    @ColumnDefault(value = "0")
     private int count;
     
     public Group(String groupId, String groupName) {
