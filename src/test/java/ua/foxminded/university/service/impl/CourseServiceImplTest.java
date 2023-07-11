@@ -27,8 +27,6 @@ import ua.foxminded.university.dao.CourseDao;
 import ua.foxminded.university.entity.Course;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.CourseService;
-import ua.foxminded.university.tools.IdProvider;
-import ua.foxminded.university.validator.ValidatorCourse;
 
 @SpringBootTest
 @ContextConfiguration(initializers = { CourseServiceImplTest.Initializer.class })
@@ -40,12 +38,6 @@ class CourseServiceImplTest {
     
     @Autowired
     CourseDao courseDao;
-    
-    @Autowired
-    ValidatorCourse validatorCourse;
-
-    @Autowired
-    IdProvider idProvider;
     
     @Autowired
     Session session;
