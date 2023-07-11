@@ -85,7 +85,6 @@ class CourseServiceImplTest {
 	System.setIn(new ByteArrayInputStream(simulatedUserInput.getBytes()));
     }
     
-
     @AfterAll
     static void tearDown() {
 	postgreSQLContainer.stop();
@@ -147,5 +146,17 @@ class CourseServiceImplTest {
 	Exception exception = assertThrows(ValidationException.class, () -> courseService.register("Tes@t", "TestTes@tTestTestTestTestTestTestTestT"));
 	
 	assertEquals(expectedMessage, exception.getMessage());
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnListOfCoursesWhenUseFindByStudentId() {
+        assertEquals(testListCourses, courseService.findByStudentId("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnListOfCoursesWhenUseGetCoursesMissingByStudentId() {
+        assertEquals(testListAllCourses, courseService.getCoursesMissingByStudentId("1d95bc79-a549-4d2c-aeb5-3f929aee1234"));
     }
 }

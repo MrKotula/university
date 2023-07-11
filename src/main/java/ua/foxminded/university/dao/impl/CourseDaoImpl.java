@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import ua.foxminded.university.dao.CourseDao;
 import ua.foxminded.university.entity.Course;
-import ua.foxminded.university.tools.IdProvider;
 
 @Transactional
 @Repository
@@ -20,8 +19,8 @@ public class CourseDaoImpl extends AbstractDaoImpl<Course> implements CourseDao 
     private static final String PROPERTY_COURSE_FIND_MISSING_COURSES = "SELECT course_id, course_name, course_description "
 		+ "FROM schedule.courses c WHERE NOT EXISTS (SELECT * FROM schedule.students_courses s_c WHERE user_id =:userId AND c.course_id = s_c.course_id)";
 
-    public CourseDaoImpl(EntityManager entityManager, IdProvider idProvider) {
-	super(entityManager, idProvider, PROPERTY_COURSE_GET_BY_ID, PROPERTY_COURSE_GET_ALL);
+    public CourseDaoImpl(EntityManager entityManager) {
+	super(entityManager, PROPERTY_COURSE_GET_BY_ID, PROPERTY_COURSE_GET_ALL);
     }
     
     @Override

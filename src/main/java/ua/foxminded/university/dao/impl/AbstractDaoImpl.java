@@ -8,7 +8,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import ua.foxminded.university.dao.Dao;
-import ua.foxminded.university.tools.IdProvider;
 
 @SuppressWarnings("unchecked")
 @AllArgsConstructor
@@ -16,7 +15,6 @@ import ua.foxminded.university.tools.IdProvider;
 public abstract class AbstractDaoImpl<T> implements Dao<T, Integer> {
     @PersistenceContext
     protected final EntityManager entityManager;
-    protected final IdProvider idProvider;
 
     private final String findByIdQuery;
     private final String findAllQuery;

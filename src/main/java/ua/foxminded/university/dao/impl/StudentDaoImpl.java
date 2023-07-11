@@ -1,6 +1,7 @@
 package ua.foxminded.university.dao.impl;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
@@ -23,8 +24,12 @@ public class StudentDaoImpl extends AbstractDaoImpl<Student> implements StudentD
 		+ "(SELECT user_id FROM schedule.students_courses WHERE course_id IN "
 		+ "(SELECT course_id FROM schedule.courses WHERE course_name =:courseName))";
     
+    private IdProvider idProvider;
+    
+    @Autowired
     public StudentDaoImpl(EntityManager entityManager, IdProvider idProvider) {
-	super(entityManager, idProvider, PROPERTY_STUDENT_GET_BY_ID, PROPERTY_STUDENT_GET_ALL);
+	super(entityManager, PROPERTY_STUDENT_GET_BY_ID, PROPERTY_STUDENT_GET_ALL);
+	this.idProvider = idProvider;
     }
     
     @Override
