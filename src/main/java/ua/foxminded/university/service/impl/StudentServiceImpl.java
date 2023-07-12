@@ -16,7 +16,7 @@ import ua.foxminded.university.validator.ValidatorUser;
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private static final String DEFAULT_GROUP_ID = "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2";
-   
+
     private final ValidatorUser validatorUser;
     private final PasswordEncoder passwordEncoder;
     private final StudentDao studentDao;
