@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
-import ua.foxminded.university.dao.StudentDao;
+import ua.foxminded.university.dao.repository.StudentRepository;
 import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.Student;
 import ua.foxminded.university.exceptions.ValidationException;
@@ -19,25 +19,25 @@ public class StudentServiceImpl implements StudentService {
    
     private final ValidatorUser validatorUser;
     private final PasswordEncoder passwordEncoder;
-    private final StudentDao studentDao;
+    private final StudentRepository studentRepository;
     
     @Override
     public List<Student> findByCourseName(String courseName) {
-	return studentDao.findByCourseName(courseName);
+	return studentRepository.findByCourseName(courseName);
     }
     
     @Override
     public void addStudentCourse(String studentId, String courseId) {
-	studentDao.addStudentCourse(studentId, courseId);
+	studentRepository.addStudentCourse(studentId, courseId);
     }
 
     @Override
     public void removeStudentFromCourse(String studentId, String courseId) {
-	studentDao.removeStudentFromCourse(studentId, courseId);
+	studentRepository.removeStudentFromCourse(studentId, courseId);
     }
     
     private void addStudentToBase(Student student) {
-	studentDao.save(student);
+	studentRepository.save(student);
     }
     
     @Override
@@ -48,7 +48,7 @@ public class StudentServiceImpl implements StudentService {
     
     @Override
     public void deleteById(String id) {
-	studentDao.deleteById(id);
+	studentRepository.deleteById(id);
     }
 
     @Override
@@ -58,11 +58,11 @@ public class StudentServiceImpl implements StudentService {
 	Student student = new Student(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(),
 		passwordEncoder.encode(userDto.getPassword()), Status.NEW);
 	if (groupId == null) {
-	    studentDao.save(student);
+	    studentRepository.save(student);
 	} else {
 	    student.setGroupId(groupId);
 	    student.setStatus(Status.STUDENT);
-	    studentDao.save(student);
+	    studentRepository.save(student);
 	}
     }
 
@@ -70,21 +70,21 @@ public class StudentServiceImpl implements StudentService {
     public void updateEmail(Student student) throws ValidationException {
 	validatorUser.validateEmail(student.getEmail());
 	
-	studentDao.update(student);
+	studentRepository.save(student);
     }
 
     @Override
     public void updatePassword(Student student) {
-	studentDao.update(student);
+	studentRepository.save(student);
     }
 
     @Override
     public void updateStatus(Status status, String studentId) {
-	studentDao.updateStatus(status, studentId);
+	studentRepository.updateStatus(status, studentId);
     }
 
     @Override
     public void changeGroup(String groupId, String studentId) {
-	studentDao.changeGroup(groupId, studentId);
+	studentRepository.changeGroup(groupId, studentId);
     }
 }
