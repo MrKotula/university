@@ -151,7 +151,7 @@ class StudentServiceImplTest {
     void shouldReturnListOfStudentsWhenUseGetStudentsWithCourseName() {
 	List<Student> testListStudent = Arrays.asList(new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e1",
 		"3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "John", "Doe", null, null, Status.STUDENT));
-	
+
 	assertEquals(testListStudent, studentService.findByCourseName("math"));
     }
 
@@ -171,6 +171,7 @@ class StudentServiceImplTest {
 	IdProvider mockedIdProvider = mock(IdProvider.class);
 	when(mockedIdProvider.generateUUID()).thenReturn("33c99439-aaf0-4ebd-a07a-bd0c550db4e1");
 	List<Student> testListStudent = Arrays.asList(testStudent);
+
 	studentDao.save(new Student("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "John", "Doe", "asd@sa", "123140", Status.NEW));
 	studentService.addStudentCourse("33c99439-aaf0-4ebd-a07a-bd0c550db4e1", "1d95bc79-a549-4d2c-aeb5-3f929aee0096");
 

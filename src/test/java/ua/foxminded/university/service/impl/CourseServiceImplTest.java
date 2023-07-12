@@ -123,6 +123,7 @@ class CourseServiceImplTest {
     
     @Test
     @Transactional
+
     void shouldReturnValidationExceptionWhenCourseNameIsLonger() throws ValidationException {
 	String expectedMessage = "Course name is has more 24 symbols!";
 	Exception exception = assertThrows(ValidationException.class, () -> courseService.register("TestTestTestTestTestTestT", "test"));
