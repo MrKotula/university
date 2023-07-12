@@ -53,13 +53,13 @@ class MenuControllerTest {
 
 	when(viewProvider.readInt()).thenReturn(2).thenReturn(0);
 	when(viewProvider.read()).thenReturn(courseName);
-	when(studentService.getStudentsWithCourseName(courseName)).thenReturn(result);
+	when(studentService.findByCourseName(courseName)).thenReturn(result);
 
 	menuController.startMenu();
 
 	verify(viewProvider, times(2)).readInt();
 	verify(viewProvider, times(1)).read();
-	verify(studentService, times(1)).getStudentsWithCourseName("math");
+	verify(studentService, times(1)).findByCourseName("math");
     }
 
     @Test
@@ -168,10 +168,10 @@ class MenuControllerTest {
 	String input = COURSE_NAME;
 	when(viewProvider.read()).thenReturn(input);
 
-	studentService.getStudentsWithCourseName(input);
+	studentService.findByCourseName(input);
 	menuController.findAllStudentsToCourseName();
 
-	verify(studentService, times(2)).getStudentsWithCourseName(COURSE_NAME);
+	verify(studentService, times(2)).findByCourseName(COURSE_NAME);
     }
 
     @Test

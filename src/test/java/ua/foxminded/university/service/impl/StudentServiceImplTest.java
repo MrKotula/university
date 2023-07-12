@@ -1,5 +1,6 @@
 package ua.foxminded.university.service.impl;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -195,5 +196,45 @@ class StudentServiceImplTest {
 	studentService.createStudent("Test", "Test");
 
 	assertEquals(student.getFirstName(), studentDao.findAll(firstPageWithTwoElements).get(2).getFirstName());
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnValidationExceptionWhenFirstNameIsLonger() throws ValidationException {
+	String expectedMessage = "First name or last name is has more 16 symbols!";
+	Exception exception = assertThrows(ValidationException.class, () -> studentService.register("3c01e6f1-762e-43b8-a6e1-7cf493cehgfd", 
+		new UserDto("JohnJohnJohnJohnF", "Doe", "testemail@ukr.net", "12345678")));
+	
+	assertEquals(expectedMessage, exception.getMessage());
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnValidationExceptionWhenLastNameIsLonger() throws ValidationException {
+	String expectedMessage = "First name or last name is has more 16 symbols!";
+	Exception exception = assertThrows(ValidationException.class, () -> studentService.register("3c01e6f1-762e-43b8-a6e1-7cf493cehgfd", 
+		new UserDto("John", "DoeDOEDoeDOEDoeDOE", "testemail@ukr.net", "12345678")));
+	
+	assertEquals(expectedMessage, exception.getMessage());
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnValidationExceptionWhenNotContainSpecialSymbol() throws ValidationException {
+	String expectedMessage = "Email is not correct!";
+	Exception exception = assertThrows(ValidationException.class, () -> studentService.register("3c01e6f1-762e-43b8-a6e1-7cf493cehgfd", 
+		new UserDto("John", "Doe", "testemailukr.net", "12345678")));
+	
+	assertEquals(expectedMessage, exception.getMessage());
+    }
+    
+    @Test
+    @Transactional
+    void shouldReturnValidationExceptionWhenDataContainSpecialCharacters() throws ValidationException {
+	String expectedMessage = "Data cannot contain special characters!";
+	Exception exception = assertThrows(ValidationException.class, () -> studentService.register("3c01e6f1-762e-43b8-a6e1-7cf493cehgfd", 
+		new UserDto("Joh@n", "!Doe", "testemail@ukr.net", "12345678")));
+	
+	assertEquals(expectedMessage, exception.getMessage());
     }
 }

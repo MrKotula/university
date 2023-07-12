@@ -79,7 +79,7 @@ public class MenuController {
 	viewProvider.printMessage(MESSAGE_INPUT_COURSE_NAME);
 	String courseName = viewProvider.read();
 
-	List<Student> students = studentService.getStudentsWithCourseName(courseName);
+	List<Student> students = studentService.findByCourseName(courseName);
 	students.stream().forEach(System.out::println);
     }
 

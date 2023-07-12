@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import ua.foxminded.university.dao.GroupDao;
 import ua.foxminded.university.entity.Group;
-import ua.foxminded.university.tools.IdProvider;
 
 @Transactional
 @Repository
@@ -18,8 +17,8 @@ public class GroupDaoImpl extends AbstractDaoImpl<Group> implements GroupDao {
 	    + "FROM schedule.groups " + "LEFT JOIN schedule.students ON groups.group_id = students.group_id "
 	    + "GROUP BY groups.group_id, groups.group_name " + "HAVING COUNT(user_id) <=:studentCount ORDER BY groups.group_id";
   
-    public GroupDaoImpl(EntityManager entityManager, IdProvider idProvider) {
-	super(entityManager, idProvider, PROPERTY_GROUP_GET_BY_ID, PROPERTY_GROUP_GET_ALL);
+    public GroupDaoImpl(EntityManager entityManager) {
+	super(entityManager, PROPERTY_GROUP_GET_BY_ID, PROPERTY_GROUP_GET_ALL);
     }
     
     @Override
