@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ua.foxminded.university.dao.GroupDao;
+import ua.foxminded.university.dao.repository.GroupRepository;
 import ua.foxminded.university.entity.Group;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.GroupService;
@@ -37,7 +37,7 @@ class GroupServiceImplTest {
     GroupService groupService;
     
     @Autowired
-    GroupDao groupDao;
+    GroupRepository groupRepository;
     
     @Autowired
     Session session;
@@ -99,7 +99,7 @@ class GroupServiceImplTest {
 	
 	groupService.register("DT-43");
 
-	assertEquals(Optional.of(group), groupDao.findById(saved));
+	assertEquals(Optional.of(group), groupRepository.findById(saved));
     }
     
     @Test
@@ -117,7 +117,7 @@ class GroupServiceImplTest {
 	testGroup = new Group("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "TE-55");
 	groupService.updateGroupName(testGroup);
 	
-	assertEquals(Optional.of(testGroup), groupDao.findById("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2"));
+	assertEquals(Optional.of(testGroup), groupRepository.findById("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2"));
     }
     
     @Test
