@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import ua.foxminded.university.dao.repository.StudentRepository;
 import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.Student;
+import ua.foxminded.university.enums.Status;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.StudentService;
-import ua.foxminded.university.tools.Status;
 import ua.foxminded.university.validator.ValidatorUser;
 
 @Service

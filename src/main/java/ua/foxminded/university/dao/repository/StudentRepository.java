@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.foxminded.university.entity.Student;
-import ua.foxminded.university.tools.Status;
+import ua.foxminded.university.enums.Status;
 
 @Repository
 @Transactional

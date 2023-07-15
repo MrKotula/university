@@ -9,7 +9,6 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.hibernate.Session;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -38,9 +37,6 @@ class CourseServiceImplTest {
     
     @Autowired
     CourseRepository courseRepository;
-    
-    @Autowired
-    Session session;
     
     Course testCourse = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee5432", "testCourse", "testDescription");
     Course testCourseMath = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee0f22", "math", "course of Mathematics");
@@ -96,11 +92,9 @@ class CourseServiceImplTest {
     @Transactional
     void verifyUseMethodRegister() throws ValidationException {
 	Course course = new Course("testCourse", "testDescription");
-	String saved = session.save(course).toString();
-	
 	courseService.register("testCourse", "testDescription");
 
-	assertEquals(Optional.of(course), courseRepository.findById(saved));
+	assertEquals(course.getCourseName(), courseRepository.findAll().get(10).getCourseName());
     }
     
     @Test
