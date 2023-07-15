@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ua.foxminded.university.dao.CourseDao;
+import ua.foxminded.university.dao.repository.CourseRepository;
 import ua.foxminded.university.entity.Course;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.CourseService;
@@ -37,7 +37,7 @@ class CourseServiceImplTest {
     CourseService courseService;
     
     @Autowired
-    CourseDao courseDao;
+    CourseRepository courseRepository;
     
     @Autowired
     Session session;
@@ -100,25 +100,25 @@ class CourseServiceImplTest {
 	
 	courseService.register("testCourse", "testDescription");
 
-	assertEquals(Optional.of(course), courseDao.findById(saved));
+	assertEquals(Optional.of(course), courseRepository.findById(saved));
     }
     
     @Test
     @Transactional
     void verifyUseMethodUpdateCourseName() throws ValidationException {
-	courseService.updateCourseName("1d95bc79-a549-4d2c-aeb5-3f929aee0f22", "test");
 	testCourse = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee0f22", "test", "course of Mathematics");
-
-	assertEquals(Optional.of(testCourse), courseDao.findById("1d95bc79-a549-4d2c-aeb5-3f929aee0f22"));
+	courseService.updateCourseName(testCourse);
+	
+	assertEquals(Optional.of(testCourse), courseRepository.findById("1d95bc79-a549-4d2c-aeb5-3f929aee0f22"));
     }
     
     @Test
     @Transactional
     void verifyUseMethodUpdateCourseDescription() throws ValidationException {
-	courseService.updateCourseDescription("1d95bc79-a549-4d2c-aeb5-3f929aee0f22", "test");
 	testCourse = new Course("1d95bc79-a549-4d2c-aeb5-3f929aee0f22", "math", "test");
-
-	assertEquals(Optional.of(testCourse), courseDao.findById("1d95bc79-a549-4d2c-aeb5-3f929aee0f22"));
+	courseService.updateCourseDescription(testCourse);
+	
+	assertEquals(Optional.of(testCourse), courseRepository.findById("1d95bc79-a549-4d2c-aeb5-3f929aee0f22"));
     }
     
     @Test
