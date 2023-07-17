@@ -138,7 +138,7 @@ class StudentServiceImplTest {
     void shouldReturnListOfStudentsWhenUseGetStudentsWithCourseName() {
 	List<Student> testListStudent = Arrays.asList(new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e1",
 		"3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "John", "Doe", null, null, Status.STUDENT));
-	
+
 	assertEquals(testListStudent, studentService.findByCourseName("math"));
     }
 
