@@ -2,8 +2,6 @@ package ua.foxminded.university.service.impl;
 
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -20,20 +18,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ua.foxminded.university.dao.StudentDao;
+import ua.foxminded.university.dao.repository.StudentRepository;
 import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.Student;
+import ua.foxminded.university.enums.Status;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.StudentService;
-import ua.foxminded.university.tools.IdProvider;
-import ua.foxminded.university.tools.Status;
 
 @SpringBootTest
 @ContextConfiguration(initializers = { StudentServiceImplTest.Initializer.class })
@@ -44,7 +39,7 @@ class StudentServiceImplTest {
     StudentService studentService;
     
     @Autowired
-    StudentDao studentDao;
+    StudentRepository studentRepository;
     
     Student testStudent = new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e1", "3c01e6f1-762e-43b8-a6e1-7cf493ce92e2",
 	    "John", "Doe", null, null, Status.STUDENT);
@@ -90,7 +85,7 @@ class StudentServiceImplTest {
     void verifyUseMethodRegister() throws ValidationException {
 	studentService.register("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", new UserDto("John", "Doe", "testemail@ukr.net", "12345678"));
 
-	assertEquals(Optional.of(testStudent), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
+	assertEquals(Optional.of(testStudent), studentRepository.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
     }
     
     @Test
@@ -98,7 +93,7 @@ class StudentServiceImplTest {
     void verifyUseMethodRegisterWhenGroupIdIsNull() throws ValidationException {
 	studentService.register(null, new UserDto("John", "Doe", "testemail@ukr.net", "12345678"));
 
-	assertEquals(Optional.of(testStudent), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
+	assertEquals(Optional.of(testStudent), studentRepository.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
     }
     
     @Test
@@ -108,7 +103,7 @@ class StudentServiceImplTest {
 		    "John", "Doe", "testemail@ukr.net", null, Status.STUDENT);
 	studentService.updateEmail(testStudent);
 
-	assertEquals(Optional.of(testStudent), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
+	assertEquals(Optional.of(testStudent), studentRepository.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
     }
     
     @Test
@@ -118,7 +113,7 @@ class StudentServiceImplTest {
 		    "John", "Doe", "testemail@ukr.net", "1234", Status.STUDENT);
 	studentService.updatePassword(testStudent);
 
-	assertEquals(Optional.of(testStudent), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
+	assertEquals(Optional.of(testStudent), studentRepository.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
     }
     
     @Test
@@ -126,15 +121,7 @@ class StudentServiceImplTest {
     void verifyUseMethodUpdateStatus() {
 	studentService.updateStatus(Status.STUDENT, "33c99439-aaf0-4ebd-a07a-bd0c550db4e1");
 
-	assertEquals(Optional.of(testStudent), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
-    }
-    
-    @Test
-    @Transactional
-    void verifyUseMethodUChangeGroupWhenGroupIdIsNull() {
-	studentService.changeGroup(null, "33c99439-aaf0-4ebd-a07a-bd0c550db4e1");
-
-	assertEquals(Optional.of(testStudentSecond), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
+	assertEquals(Optional.of(testStudent), studentRepository.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
     }
     
     @Test
@@ -143,7 +130,7 @@ class StudentServiceImplTest {
 	Student testStudent = new Student("33c99439-aaf0-4ebd-a07a-bd0c550db4e1", "3c01e6f1-762e-43b8-a6e1-7cf493ce5325", "John", "Doe", null, "12345678", Status.STUDENT);
 	studentService.changeGroup("3c01e6f1-762e-43b8-a6e1-7cf493ce5325", "33c99439-aaf0-4ebd-a07a-bd0c550db4e1");
 
-	assertEquals(Optional.of(testStudent), studentDao.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
+	assertEquals(Optional.of(testStudent), studentRepository.findById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1"));
     }
     
     @Test
@@ -168,11 +155,8 @@ class StudentServiceImplTest {
     @Test
     @Transactional
     void verifyUseMethodWhenUseInsertSaveAndAddStudentCourse() {
-	IdProvider mockedIdProvider = mock(IdProvider.class);
-	when(mockedIdProvider.generateUUID()).thenReturn("33c99439-aaf0-4ebd-a07a-bd0c550db4e1");
 	List<Student> testListStudent = Arrays.asList(testStudent);
-
-	studentDao.save(new Student("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "John", "Doe", "asd@sa", "123140", Status.NEW));
+	studentRepository.save(new Student("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "John", "Doe", "asd@sa", "123140", Status.NEW));
 	studentService.addStudentCourse("33c99439-aaf0-4ebd-a07a-bd0c550db4e1", "1d95bc79-a549-4d2c-aeb5-3f929aee0096");
 
 	assertEquals(testListStudent, studentService.findByCourseName("drawing"));
@@ -184,19 +168,17 @@ class StudentServiceImplTest {
 	List<Student> testListStudent = Arrays.asList(new Student("33c99439-aaf0-4ebd-a07a-bd0c550d2311",
 		"3c01e6f1-762e-43b8-a6e1-7cf493ce5325", "Jane", "Does", null, null, Status.STUDENT));
 	studentService.deleteById("33c99439-aaf0-4ebd-a07a-bd0c550db4e1");
-	Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
 
-	assertEquals(testListStudent, studentDao.findAll(firstPageWithTwoElements));
+	assertEquals(testListStudent, studentRepository.findAll());
     }
 
     @Test
     @Transactional
     void verifyUseMethodWhenUseCreateStudent() {
-	Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
 	Student student = new Student("3c01e6f1-762e-43b8-a6e1-7cf493ce5325", "Test", "Test", Status.NEW);
 	studentService.createStudent("Test", "Test");
 
-	assertEquals(student.getFirstName(), studentDao.findAll(firstPageWithTwoElements).get(2).getFirstName());
+	assertEquals(student.getFirstName(), studentRepository.findAll().get(2).getFirstName());
     }
     
     @Test

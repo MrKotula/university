@@ -3,8 +3,8 @@ package ua.foxminded.university.service;
 import java.util.List;
 import ua.foxminded.university.dto.UserDto;
 import ua.foxminded.university.entity.Student;
+import ua.foxminded.university.enums.Status;
 import ua.foxminded.university.exceptions.ValidationException;
-import ua.foxminded.university.tools.Status;
 
 public interface StudentService {
     void register(String groupId, UserDto userDto) throws ValidationException;

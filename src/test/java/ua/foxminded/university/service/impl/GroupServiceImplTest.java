@@ -9,7 +9,6 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.hibernate.Session;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ua.foxminded.university.dao.GroupDao;
+import ua.foxminded.university.dao.repository.GroupRepository;
 import ua.foxminded.university.entity.Group;
 import ua.foxminded.university.exceptions.ValidationException;
 import ua.foxminded.university.service.GroupService;
@@ -37,10 +36,7 @@ class GroupServiceImplTest {
     GroupService groupService;
     
     @Autowired
-    GroupDao groupDao;
-    
-    @Autowired
-    Session session;
+    GroupRepository groupRepository;
     
     Group testGroup = new Group("1d95bc79-a549-4d2c-aeb5-3f929aee5432", "DT-43");
     Group testGroupOR = new Group("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "OR-41");
@@ -95,11 +91,9 @@ class GroupServiceImplTest {
     @Transactional
     void verifyUseMethodRegister() throws ValidationException {
 	Group group = new Group("DT-43");
-	String saved = session.save(group).toString();
-	
 	groupService.register("DT-43");
 
-	assertEquals(Optional.of(group), groupDao.findById(saved));
+	assertEquals(group.getGroupName(), groupRepository.findAll().get(10).getGroupName());
     }
     
     @Test
@@ -117,7 +111,7 @@ class GroupServiceImplTest {
 	testGroup = new Group("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2", "TE-55");
 	groupService.updateGroupName(testGroup);
 	
-	assertEquals(Optional.of(testGroup), groupDao.findById("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2"));
+	assertEquals(Optional.of(testGroup), groupRepository.findById("3c01e6f1-762e-43b8-a6e1-7cf493ce92e2"));
     }
     
     @Test

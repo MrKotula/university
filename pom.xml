@@ -132,8 +132,9 @@
                     <excludes>
                         <exclude>ua/foxminded/university/UniversityApplication.class</exclude>
                         <exclude>ua/foxminded/university/entity/*</exclude>
-                        <exclude>ua/foxminded/university/dao/SpringJdbcConfig.class</exclude>
+                        <exclude>ua/foxminded/university/config/SpringConfig.class</exclude>
                         <exclude>ua/foxminded/university/dto/UserDto.class</exclude>
+                        <exclude>ua/foxminded/university/enums/Status.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

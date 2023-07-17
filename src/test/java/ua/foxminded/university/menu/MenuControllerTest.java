@@ -15,10 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.foxminded.university.entity.Student;
+import ua.foxminded.university.enums.Status;
 import ua.foxminded.university.service.CourseService;
 import ua.foxminded.university.service.GroupService;
 import ua.foxminded.university.service.StudentService;
-import ua.foxminded.university.tools.Status;
 import ua.foxminded.university.viewprovider.ViewProvider;
 import ua.foxminded.university.viewprovider.ViewProviderImpl;
 

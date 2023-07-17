@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ua.foxminded.university.tools.Status;
+import ua.foxminded.university.enums.Status;
 
 @NoArgsConstructor
 @Data

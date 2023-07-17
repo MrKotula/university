@@ -1,4 +1,4 @@
-package ua.foxminded.university.tools;
+package ua.foxminded.university.enums;
 
 public enum Status {
     NEW("New"), STUDENT("Student"), TEACHER("Teacher");
